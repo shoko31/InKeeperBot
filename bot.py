@@ -34,11 +34,11 @@ async def on_ready():
 async def on_message(message):
     if client.user is not message.author: # prevent bot sending message to himself
         if type(message.channel) is discord.DMChannel or type(message.channel) is discord.GroupChannel: # DMs
-            if str(message.content).startswith('!!help'):
+            if str(message.content).startswith('!!help') or str(message.content).startswith('!!commands'):
                 await message.channel.send(get_help().replace(textfile_user_mention_tag, User.get_at_mention(message.author.id)).replace(textfile_bot_mention_tag, User.get_at_mention(client.user.id)))
         else: # Message on a server
             if message.guild is not None:
-                if str(message.content).startswith('!!help'):
+                if str(message.content).startswith('!!help') or str(message.content).startswith('!!commands'):
                     await message.channel.send(get_help().replace('#USER', f'<@{message.author.id}>').replace('#BOT', f'<@{client.user.id}>'))
                     pass
                 else:

@@ -58,6 +58,8 @@ class Server:
             await self.cmd_stop_afk(userid, channel)
         elif str(msg.content).startswith((self.cmd_prefix + 'afk')):
             await self.cmd_afk(userid, channel)
+        elif str(msg.content).startswith((self.cmd_prefix + 'prefix')):
+            await self.cmd_get_set_prefix(userid, channel, msg)
 
     async def cmd_stop_afk(self, userid, channel): # stop afk mentions (but keep admin logs)
         user = self.members[userid]
@@ -70,6 +72,17 @@ class Server:
         user.afk_mentions = True
         await channel.send(f"C'est noté { user.get_at_mention() } ! Tu seras de nouveau mentionné AFK!")
         await self.print_admin_log(f"{ user.get_at_mention() } used !afk command.")
+
+    async def cmd_get_set_prefix(self, userid, channel, message):
+        splitted_message = str(message.content).split()
+        if len(splitted_message) == 1: # No argument, display current command prefix
+            await channel.send(f"Le prefix actuel est `{ self.cmd_prefix }`.")
+        else: # Argument, changing the prefix
+            if self.__guild.get_member(userid).guild_permissions.administrator is True:
+                self.cmd_prefix = splitted_message[1]
+                await channel.send(f"Le prefix est maintenant `{splitted_message[1]}`.")
+            else:
+                await channel.send(f":octagonal_sign: Désolé { User.get_at_mention(userid) }, mais tu n'as pas les permissions requises pour executer cette commande !")
 
     ### SAVE AND LOAD ###
     @staticmethod
