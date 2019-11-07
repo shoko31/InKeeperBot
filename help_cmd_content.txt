@@ -1,0 +1,8 @@
+Salut **#USER** !
+Je suis **#BOT**.
+Avec moi, tu pourras bientôt faire plein de trucs cool :thumbsup: . Mais pour le moment, je suis encore en développement :construction_worker:.
+Tu peux cependant deja utiliser les commandes suivantes sur n'importe lequel des serveurs ou je me trouve:
+
+- **!!help** : affiche ce message
+ - **!!afk** : active les mentions funs lorsque tu es AFK sur un serveur
+ - **!!stopafk** : désactive les mentions funs lorsque tu es AFK sur un serveur
