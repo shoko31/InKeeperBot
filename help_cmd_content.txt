@@ -8,6 +8,9 @@ Tu peux cependant déjà utiliser les commandes suivantes sur n'importe lequel d
 
 - **!!afk** : active les mentions funs lorsque tu es AFK sur un serveur
 - **!!stopafk** : désactive les mentions funs lorsque tu es AFK sur un serveur
+- **!!warns** : affiche les avertissements que tu as reçu
 
 - **!!prefix** : affiche le prefix utilisé pour les commandes (par défaut: `!!`)
 - **!!prefix <prefix>** : change le prefix utilisé pour les commandes (par défaut: `!!`)
+- **!!warns <users>** : affiche les avertissements reçus
+- **!!warn <users> <reason>** : Donne un avertissement aux utilisateurs mentionnés

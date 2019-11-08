@@ -66,7 +66,7 @@ async def on_voice_state_update(member, before, after):
         user = find(lambda m: m.name == str(member).split('#')[0], client.users)
         await server.user_voice_disconnected(user.id, before_channel)
 
-    if before.channel is not None and after.channel is not None:
+    if before.channel is not None and after.channel is not None and before.channel is not after.channel:
         before_channel = client.get_channel(before.channel.id)
         after_channel = client.get_channel(after.channel.id)
         server = servers.get(before_channel.guild.id)
