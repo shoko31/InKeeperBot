@@ -5,6 +5,7 @@ import discord
 from dotenv import load_dotenv
 from server import *
 from discord.utils import find
+from utils import bot_id
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
@@ -14,15 +15,24 @@ textfile_bot_mention_tag = os.getenv('TEXTFILE_BOT_MENTION')
 client = discord.Client()
 servers = {}
 
-client.activity = discord.Activity(name='!!help', details='!!help', state='!!help', type=discord.ActivityType.listening)
+dm_help_cmd = os.getenv('SRV_DEFAULT_CMD_PREFIX_NAME') + 'help'
+dm_commands_cmd = os.getenv('SRV_DEFAULT_CMD_PREFIX_NAME') + 'commands'
+client.activity = discord.Activity(name=dm_help_cmd, details=dm_help_cmd, state=dm_help_cmd, type=discord.ActivityType.listening)
 
-def get_help():
-    with open('help_cmd_content.txt') as fp:
-        text = fp.read()
-    return text
+async def send_dm_help(message):
+    text = ""
+    with open('./lang/fr/dm_intro.txt') as fp:
+        text += fp.read()
+    with open('./lang/fr/commands_help.txt') as fp:
+        text += fp.read()
+    await message.channel.send(
+        text.replace(os.getenv('TEXTFILE_USER_MENTION'), User.get_at_mention(message.author.id))
+            .replace(os.getenv('TEXTFILE_BOT_MENTION'), User.get_at_mention(bot_id[0]))
+            .replace(os.getenv('TEXTFILE_CMD_PREFIX_MENTION'), os.getenv('SRV_DEFAULT_CMD_PREFIX_NAME')))
 
 @client.event
 async def on_ready():
+    bot_id[0] = client.user.id
     for guild in client.guilds:
         print(f'{client.user} has connected to Discord: {guild.name}(id: {guild.id})')
         servers[guild.id] = Server(guild)
@@ -34,16 +44,12 @@ async def on_ready():
 async def on_message(message):
     if client.user is not message.author: # prevent bot sending message to himself
         if type(message.channel) is discord.DMChannel or type(message.channel) is discord.GroupChannel: # DMs
-            if str(message.content).startswith('!!help') or str(message.content).startswith('!!commands'):
-                await message.channel.send(get_help().replace(textfile_user_mention_tag, User.get_at_mention(message.author.id)).replace(textfile_bot_mention_tag, User.get_at_mention(client.user.id)))
+            if str(message.content).startswith(dm_help_cmd) or str(message.content).startswith(dm_commands_cmd):
+                await send_dm_help(message)
         else: # Message on a server
             if message.guild is not None:
-                if str(message.content).startswith('!!help') or str(message.content).startswith('!!commands'):
-                    await message.channel.send(get_help().replace('#USER', f'<@{message.author.id}>').replace('#BOT', f'<@{client.user.id}>'))
-                    pass
-                else:
-                    server = servers.get(message.guild.id)
-                    await server.cmd_router(message, message.author.id, message.channel)
+                server = servers.get(message.guild.id)
+                await server.cmd_router(message, message.author.id, message.channel)
 
 @client.event
 async def on_voice_state_update(member, before, after):

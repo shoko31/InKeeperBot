@@ -6,6 +6,7 @@ from discord.utils import find
 import json
 from utils import load_json_data
 
+from cmds.cmd_help import HelpCmd, CommandsCmd
 from cmds.cmd_warn import WarnCmd
 from cmds.cmd_warns import WarnsCmd
 from cmds.cmd_afk import AfkCmd
@@ -61,7 +62,8 @@ class Server:
     ### COMMANDS ###
     async def cmd_router(self, msg, userid, channel):
         content = str(msg.content)
-        commands = [AfkCmd, StopAfkCmd,
+        commands = [HelpCmd, CommandsCmd,
+                    AfkCmd, StopAfkCmd,
                     WarnsCmd, WarnCmd,
                     PrefixCmd]
 

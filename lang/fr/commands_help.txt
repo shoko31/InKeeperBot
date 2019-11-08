@@ -1,0 +1,11 @@
+- **#CMDPREFIX#help** : affiche ce message
+- **#CMDPREFIX#commands** : affiche ce message
+
+- **#CMDPREFIX#afk** : active les mentions funs lorsque tu es AFK sur un serveur
+- **#CMDPREFIX#stopafk** : désactive les mentions funs lorsque tu es AFK sur un serveur
+- **#CMDPREFIX#warns** : affiche les avertissements que tu as reçu
+
+- **#CMDPREFIX#prefix** : affiche le prefix utilisé pour les commandes (par défaut: `!!`)
+- **#CMDPREFIX#prefix <prefix>** : change le prefix utilisé pour les commandes (par défaut: `!!`)
+- **#CMDPREFIX#warns <users>** : affiche les avertissements reçus
+- **#CMDPREFIX#warn <users> <reason>** : Donne un avertissement aux utilisateurs mentionnés
