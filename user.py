@@ -40,6 +40,9 @@ class User:
     def to_json(user):
         save_user = {
             'id': user.id,
+            'name': user.name,
+            'display_name': user.get_display_name(),
+            'discriminator': user.discriminator,
             'afk_mentions': user.afk_mentions,
             'xp': user.xp,
             'muted': user.muted,

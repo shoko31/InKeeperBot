@@ -70,6 +70,7 @@ class Server:
         for cmd in commands:
             if content.startswith(self.cmd_prefix + cmd.name):
                 await cmd.run_cmd(self, userid, channel, msg)
+                await self.print_admin_log(f"{User.get_at_mention(userid)} used **{self.cmd_prefix}{cmd.name}** command.")
                 break
 
     async def cmd_mute_player(self, userid, channel, message):
@@ -85,7 +86,7 @@ class Server:
             'log_text_channel_name': server.log_text_channel_name,
             'cmd_prefix': server.cmd_prefix,
             'admin_logs': server.admin_logs,
-            'members': [User.to_json(member) for key, member in server.members.items()]
+            'members': [json.loads(User.to_json(member)) for key, member in server.members.items()]
         }
         json_to_save = json.dumps(to_save)
         with open('./saves/' + str(server.id) + '.save', 'w') as fp:
@@ -106,9 +107,8 @@ class Server:
             server.admin_logs = load_json_data(loaded_server, 'admin_logs', bool(os.getenv('SRV_DEFAULT_DISPLAY_ADMIN_LOGS')))
             for key, member in server.members.items():
                 for json_member in load_json_data(loaded_server, 'members', []):
-                    loaded_json_member = json.loads(json_member)
-                    if load_json_data(loaded_json_member, 'id', -1) == member.id:
-                        User.from_json(loaded_json_member, member)
+                    if load_json_data(json_member, 'id', -1) == member.id:
+                        User.from_json(json_member, member)
                         break
             return True
         except FileNotFoundError:
