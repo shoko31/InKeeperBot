@@ -16,6 +16,9 @@ async def cmd_help(server, userid, channel, message):
         text.replace(os.getenv('TEXTFILE_USER_MENTION'), User.get_at_mention(message.author.id))
             .replace(os.getenv('TEXTFILE_BOT_MENTION'), User.get_at_mention(bot_id[0]))
             .replace(os.getenv('TEXTFILE_CMD_PREFIX_MENTION'), server.cmd_prefix))
+    return True
 
 HelpCmd = ServerCmd('help', cmd_help)
+HelpCmd.required_perks = ['cmd.help']
 CommandsCmd = ServerCmd('commands', cmd_help)
+CommandsCmd.required_perks = ['cmd.commands']

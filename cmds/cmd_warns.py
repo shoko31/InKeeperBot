@@ -5,19 +5,33 @@ from user import User
 import datetime
 
 
+async def cmd_player_self_warns_display(server, userid, channel, message):
+    if userid not in server.members.keys():
+        raise Exception(f'Cannot self display user warns ({userid}) : user id not found in this guild')
+    await server.members[userid].display_warnings(channel)
+    return True
+
+
+async def cmd_player_other_warns_display(server, userid, channel, message):
+    for mention in message.mentions:
+        if mention.id not in server.members.keys():
+            raise Exception(f'Cannot display user warns ({mention.id}) : user id not found in this guild')
+        await server.members[mention.id].display_warnings(channel)
+    return True
+
+
 async def cmd_player_warns_display(server, userid, channel, message):
     if len(message.mentions) < 1:  # self displays warnings
-        if userid not in server.members.keys():
-            raise Exception(f'Cannot self display user warns ({userid}) : user id not found in this guild')
-        await server.members[userid].display_warnings(channel)
+        return await WarnsSelfCmd.run_cmd(server, userid, channel, message)
     else:
-        if server.guild.get_member(userid).guild_permissions.administrator is False:
-            await channel.send(
-                f":octagonal_sign: Désolé {User.get_at_mention(userid)}, mais tu n'as pas les permissions requises pour executer cette commande !")
-        else:
-            for mention in message.mentions:
-                if mention.id not in server.members.keys():
-                    raise Exception(f'Cannot display user warns ({mention.id}) : user id not found in this guild')
-                await server.members[mention.id].display_warnings(channel)
+        return await WarnsOtherCmd.run_cmd(server, userid, channel, message)
+
+
+WarnsSelfCmd = ServerCmd('warnsself', cmd_player_self_warns_display)
+WarnsSelfCmd.required_perks = ['cmd.warns', 'cmd.warns.self']
+
+WarnsOtherCmd = ServerCmd('warnsother', cmd_player_other_warns_display)
+WarnsOtherCmd.required_perks = ['cmd.warns', 'cmd.warns.other']
 
 WarnsCmd = ServerCmd('warns', cmd_player_warns_display)
+WarnsCmd.required_perks = ['cmd.warns', 'cmd.warns.self', 'cmd.warns.other']

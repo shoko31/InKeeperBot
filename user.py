@@ -1,7 +1,7 @@
 # user.py
 
 import json
-from utils import load_json_data
+from utils import load_json_data, myconverter
 import datetime
 
 class User:
@@ -49,7 +49,7 @@ class User:
             'muted_until': user.muted_until,
             'warnings': user.warnings
         }
-        return json.dumps(save_user)
+        return json.dumps(save_user, default=myconverter)
 
     @staticmethod
     def from_json(json_object, user):
