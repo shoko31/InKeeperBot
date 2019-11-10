@@ -5,6 +5,7 @@ from user import *
 from discord.utils import find
 import json
 from utils import load_json_data, myconverter
+import threading
 
 from cmds.cmd_accept import AcceptCmd
 from cmds.cmd_help import HelpCmd, CommandsCmd
@@ -15,11 +16,13 @@ from cmds.cmd_stop_afk import StopAfkCmd
 from cmds.cmd_prefix import PrefixCmd
 from cmds.cmd_perm import PermCmd
 from cmds.cmd_mute import MuteCmd
+from cmds.cmd_unmute import UnmuteCmd
 
 
 class Server:
 
     def __init__(self, guild):
+        self.lock = threading.Lock()
         self.guild = guild
         self.id = guild.id
         self.name = guild.name
@@ -55,8 +58,11 @@ class Server:
     async def user_voice_connected(self, userid, channel):
         await self.print_admin_log(
             f'{User.get_at_mention(userid)} ({userid}) connected to :loud_sound:**{channel.name}**')
-        if userid in self.members.keys() and self.members[userid].muted is True:
-            await self.guild.get_member(userid).edit(mute=True)
+        if userid in self.members.keys():
+            if self.members[userid].muted is True:
+                await self.guild.get_member(userid).edit(mute=True)
+            else:
+                await self.guild.get_member(userid).edit(mute=False)
 
     async def user_voice_disconnected(self, userid, channel):
         await self.print_admin_log(
@@ -77,7 +83,7 @@ class Server:
                     WarnsCmd, WarnCmd,
                     PrefixCmd,
                     PermCmd,
-                    MuteCmd]
+                    MuteCmd, UnmuteCmd]
 
         for cmd in commands:
             if content.startswith(self.cmd_prefix + cmd.name):

@@ -2,10 +2,13 @@
 import os
 import asyncio
 import discord
+import threading
 from dotenv import load_dotenv
 from server import *
 from discord.utils import find
 from utils import bot_id
+from datetime import datetime
+from time import sleep
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
@@ -14,10 +17,36 @@ textfile_bot_mention_tag = os.getenv('TEXTFILE_BOT_MENTION')
 
 client = discord.Client()
 servers = {}
+background_loop_thread = None
 
 dm_help_cmd = os.getenv('SRV_DEFAULT_CMD_PREFIX_NAME') + 'help'
 dm_commands_cmd = os.getenv('SRV_DEFAULT_CMD_PREFIX_NAME') + 'commands'
 client.activity = discord.Activity(name=dm_help_cmd, details=dm_help_cmd, state=dm_help_cmd, type=discord.ActivityType.listening)
+
+loop = asyncio.get_event_loop()
+
+
+def check_muted_members(server):
+    current_time = datetime.now()
+    for key, member in server.members.items():
+        if member.muted and member.muted_until is not None:
+            if member.muted_until <= current_time:
+                member.lock.acquire()
+                srv_user = server.guild.get_member(member.id)
+                if srv_user is not None and srv_user.voice is not None:
+                    member.muted_until = None
+                    member.muted = False
+                    unmute_result = asyncio.run_coroutine_threadsafe(srv_user.edit(mute=False), loop)
+                    unmute_result.result()
+                member.lock.release()
+
+
+def background_loop():
+    while 1:
+        for key, server in servers.items():
+            check_muted_members(server)
+        sleep(1)
+
 
 async def send_dm_help(message):
     text = ""
@@ -30,6 +59,7 @@ async def send_dm_help(message):
             .replace(os.getenv('TEXTFILE_BOT_MENTION'), User.get_at_mention(bot_id[0]))
             .replace(os.getenv('TEXTFILE_CMD_PREFIX_MENTION'), os.getenv('SRV_DEFAULT_CMD_PREFIX_NAME')))
 
+
 @client.event
 async def on_ready():
     bot_id[0] = client.user.id
@@ -38,6 +68,9 @@ async def on_ready():
         servers[guild.id] = Server(guild)
         if Server.load(servers[guild.id]) is False:
             Server.save(servers[guild.id])
+    # start clock for user checks
+    background_loop_thread = threading.Thread(target=background_loop, daemon=True)
+    background_loop_thread.start()
 
 
 @client.event
@@ -89,7 +122,6 @@ async def on_disconnect():
 
 #client.run(token)
 
-loop = asyncio.get_event_loop()
 try:
     loop.run_until_complete(client.login(token))
     loop.run_until_complete(client.connect())

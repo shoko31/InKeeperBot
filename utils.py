@@ -10,6 +10,6 @@ def load_json_data(json_object, key, default_value):
 
 def myconverter(o):
     if isinstance(o, datetime):
-        return o.__str__()
+        return datetime.strftime(o, '%a %b %d %H:%M:%S %Y')
 
 bot_id = [-1]

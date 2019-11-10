@@ -19,6 +19,7 @@ async def cmd_mute(server, userid, channel, message):
         if mention.id not in server.members.keys():
             raise Exception(f'Cannot find user ({ mention.id }) in server')
             pass
+        server.members[mention.id].lock.acquire()
         server.members[mention.id].muted = True
         if mention.voice is not None:
             await mention.edit(mute=True)
@@ -30,6 +31,7 @@ async def cmd_mute(server, userid, channel, message):
             server.members[mention.id].muted_until = None
             await channel.send(
                 f"{User.get_at_mention(mention.id)} has been muted by {User.get_at_mention(userid)}")
+        server.members[mention.id].lock.release()
     return True
 
 MuteCmd = ServerCmd('mute', cmd_mute)

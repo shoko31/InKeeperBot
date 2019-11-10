@@ -3,10 +3,12 @@
 import json
 from utils import load_json_data, myconverter
 import datetime
+import threading
 
 class User:
 
     def __init__(self, discord_user):
+        self.lock = threading.Lock()
         self.__discord_user = discord_user
         self.id = discord_user.id
         self.name = discord_user.name
@@ -59,5 +61,7 @@ class User:
         user.xp = load_json_data(json_object, 'xp', 0)
         user.muted = bool(load_json_data(json_object, 'muted', False))
         user.muted_until = load_json_data(json_object, 'muted_until', None)
+        if user.muted_until is not None:
+            user.muted_until = datetime.datetime.strptime(user.muted_until, '%a %b %d %H:%M:%S %Y')
         user.warnings = load_json_data(json_object, 'warnings', [])
         return user
