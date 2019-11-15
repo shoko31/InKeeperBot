@@ -1,0 +1,12 @@
+{
+    "USER_IS_AFK": "#USER# est parti boire une p'tite bière :beer: !",
+    "USER_NO_MORE_AFK": "#USER# Alors ? Elle était bonne cette :beer: ?",
+
+    "MISSING_PERM": ":octagonal_sign: Désolé #USER#, mais tu n'as pas les permissions requises pour executer cette commande !",
+
+    "CMD_LANG_SET": "La langue est maintenant `{0}`.",
+    "CMD_LANG_GET": "La langue actuelle est `{0}`.",
+
+    "CMD_AFK": "C'est noté #USER# ! Tu seras de nouveau mentionné AFK!",
+    "CMD_STOPAFK": "C'est noté #USER# ! Tu ne seras plus mentionné AFK!"
+}

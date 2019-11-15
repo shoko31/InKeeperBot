@@ -1,5 +1,7 @@
 # cmd.py
 
+from lang.lang import Lang
+from config import cfg
 from user import User
 from perks import Perks
 
@@ -33,7 +35,7 @@ class ServerCmd:
     async def run_cmd(self, server, userid, channel, message):
         if not self.can_execute(server, userid):
             await channel.send(
-                f":octagonal_sign: Désolé {User.get_at_mention(userid)}, mais tu n'as pas les permissions requises pour executer cette commande !")
+                Lang.get('MISSING_PERM', server.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(userid)))
             return False
         else:
             return await self.action(server, userid, channel, message)

@@ -1,5 +1,6 @@
 - **#CMDPREFIX#help** : affiche ce message
 - **#CMDPREFIX#commands** : affiche ce message
+- **#CMDPREFIX#version** : Affiche la version du bot
 
 - **#CMDPREFIX#afk** : active les mentions funs lorsque tu es AFK sur un serveur
 - **#CMDPREFIX#stopafk** : désactive les mentions funs lorsque tu es AFK sur un serveur
@@ -9,3 +10,8 @@
 - **#CMDPREFIX#prefix <prefix>** : change le prefix utilisé pour les commandes (par défaut: `!!`)
 - **#CMDPREFIX#warns <users>** : affiche les avertissements reçus
 - **#CMDPREFIX#warn <users> <reason>** : Donne un avertissement aux utilisateurs mentionnés
+- **#CMDPREFIX#mute <users> (<time>)** : Empêche les utilisateurs de parler (pendant X secondes)
+- **#CMDPREFIX#unmute <users>** : Suspend la restriction de parole
+
+- **#CMDPREFIX#lang <lang_key>** : Changes la langue du bot sur le serveur
+- **#CMDPREFIX#perm <groups> <perms>** : Ajoute/Suprime les permissions aux groupes

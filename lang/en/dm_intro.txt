@@ -1,0 +1,5 @@
+Hey **#USER#** !
+I'm **#BOT#**.
+With me, you'll soon be able to do a lot of cool things :thumbsup:. But for now, I am still under development :construction_worker:.
+However, you can already use these commands on every server I am on:
+

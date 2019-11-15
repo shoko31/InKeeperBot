@@ -7,15 +7,17 @@ from perks import Perks
 
 async def cmd_set_perm(server, userid, channel, message):
     perks = str(message.content).split()[len(message.role_mentions) + 1:]
-    if not Perks.is_valid(perks):
+    if not Perks.is_valid([perk[1:] if perk.startswith(('+', '-')) else perk for perk in perks]):
         await channel.send("La ou les permissions sont incorrectes")
         return False
     else:
         for role in message.role_mentions:
+            remove_perks = [perk[1:] for perk in perks if perk.startswith('-')]
+            add_perks = [perk.replace('+', '') for perk in perks if not perk.startswith('-') and perk.replace('+', '') not in remove_perks]
             if str(role.id) in server.group_perks.keys():
-                perks = server.group_perks[str(role.id)] + perks
-            print(perks)
-            server.group_perks[str(role.id)] = perks
+                old_perks = [perk for perk in server.group_perks[str(role.id)] if perk not in add_perks and perk not in remove_perks]
+                add_perks = old_perks + add_perks
+            server.group_perks[str(role.id)] = add_perks
         await channel.send(f"Permissions added for {' '.join([r.mention for r in message.role_mentions])}")
         return True
 

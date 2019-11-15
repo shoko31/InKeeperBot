@@ -3,6 +3,7 @@ import os
 import asyncio
 import discord
 import threading
+from config import cfg
 from dotenv import load_dotenv
 from server import *
 from discord.utils import find
@@ -12,15 +13,15 @@ from time import sleep
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
-textfile_user_mention_tag = os.getenv('TEXTFILE_USER_MENTION')
-textfile_bot_mention_tag = os.getenv('TEXTFILE_BOT_MENTION')
+textfile_user_mention_tag = cfg.get_value('TEXTFILE_USER_MENTION')
+textfile_bot_mention_tag = cfg.get_value('TEXTFILE_BOT_MENTION')
 
 client = discord.Client()
 servers = {}
 background_loop_thread = None
 
-dm_help_cmd = os.getenv('SRV_DEFAULT_CMD_PREFIX_NAME') + 'help'
-dm_commands_cmd = os.getenv('SRV_DEFAULT_CMD_PREFIX_NAME') + 'commands'
+dm_help_cmd = cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME') + 'help'
+dm_commands_cmd = cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME') + 'commands'
 client.activity = discord.Activity(name=dm_help_cmd, details=dm_help_cmd, state=dm_help_cmd, type=discord.ActivityType.listening)
 
 loop = asyncio.get_event_loop()
@@ -50,14 +51,14 @@ def background_loop():
 
 async def send_dm_help(message):
     text = ""
-    with open('./lang/fr/dm_intro.txt') as fp:
+    with open('./lang/en/dm_intro.txt') as fp:
         text += fp.read()
-    with open('./lang/fr/commands_help.txt') as fp:
+    with open('./lang/en/commands_help.txt') as fp:
         text += fp.read()
     await message.channel.send(
-        text.replace(os.getenv('TEXTFILE_USER_MENTION'), User.get_at_mention(message.author.id))
-            .replace(os.getenv('TEXTFILE_BOT_MENTION'), User.get_at_mention(bot_id[0]))
-            .replace(os.getenv('TEXTFILE_CMD_PREFIX_MENTION'), os.getenv('SRV_DEFAULT_CMD_PREFIX_NAME')))
+        text.replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(message.author.id))
+            .replace(cfg.get_value('TEXTFILE_BOT_MENTION'), User.get_at_mention(bot_id[0]))
+            .replace(cfg.get_value('TEXTFILE_CMD_PREFIX_MENTION'), cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME')))
 
 
 @client.event

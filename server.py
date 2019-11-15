@@ -1,13 +1,15 @@
 # server.py
 
-import os
 from user import *
+from config import cfg
+from lang.lang import Lang
 from discord.utils import find
 import json
 from utils import load_json_data, myconverter
 import threading
 
 from cmds.cmd_accept import AcceptCmd
+from cmds.cmd_version import VersionCmd
 from cmds.cmd_help import HelpCmd, CommandsCmd
 from cmds.cmd_warn import WarnCmd
 from cmds.cmd_warns import WarnsCmd
@@ -17,6 +19,7 @@ from cmds.cmd_prefix import PrefixCmd
 from cmds.cmd_perm import PermCmd
 from cmds.cmd_mute import MuteCmd
 from cmds.cmd_unmute import UnmuteCmd
+from cmds.cmd_lang import LangCmd
 
 
 class Server:
@@ -26,11 +29,12 @@ class Server:
         self.guild = guild
         self.id = guild.id
         self.name = guild.name
+        self.lang = cfg.get_value('SRV_DEFAULT_LANG')
         self.afk_channel_id = guild.afk_channel.id
-        self.bot_text_channel_name = os.getenv('SRV_DEFAULT_BOT_TEXT_CHANNEL_NAME')
-        self.log_text_channel_name = os.getenv('SRV_DEFAULT_LOGS_TEXT_CHANNEL_NAME')
-        self.cmd_prefix = os.getenv('SRV_DEFAULT_CMD_PREFIX_NAME')
-        self.admin_logs = bool(os.getenv('SRV_DEFAULT_DISPLAY_ADMIN_LOGS'))
+        self.bot_text_channel_name = cfg.get_value('SRV_DEFAULT_BOT_TEXT_CHANNEL_NAME')
+        self.log_text_channel_name = cfg.get_value('SRV_DEFAULT_LOGS_TEXT_CHANNEL_NAME')
+        self.cmd_prefix = cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME')
+        self.admin_logs = bool(cfg.get_value('SRV_DEFAULT_DISPLAY_ADMIN_LOGS'))
         self.members = {}
         self.group_perks = {}
         for member in guild.members:
@@ -47,11 +51,11 @@ class Server:
         if after.id == self.afk_channel_id:
             await self.print_admin_log(f'{User.get_at_mention(user.id)} ({ user.id }) moved from :sound:**{before.name}** and is now :zzz:**AFK**')
             if user.afk_mentions is True:
-                await self.get_bot_text_channel().send(f"{User.get_at_mention(user.id)} est parti boire une p'tite bière :beer: !")
+                await self.get_bot_text_channel().send(Lang.get('USER_IS_AFK', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(user.id)))
         elif before.id == self.afk_channel_id:
             await self.print_admin_log(f'{User.get_at_mention(user.id)} ({user.id}) moved to :loud_sound:**{after.name}** and is no longer ~~**afk**~~')
             if user.afk_mentions is True:
-                await self.get_bot_text_channel().send(f"{User.get_at_mention(user.id)} Alors ? Elle était bonne cette :beer: ?")
+                await self.get_bot_text_channel().send(Lang.get('USER_NO_MORE_AFK', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(user.id)))
         else:
             await self.print_admin_log(f"{User.get_at_mention(user.id)} ({user.id}) moved from :sound:**{before.name}** to :loud_sound:**{after.name}**")
 
@@ -78,12 +82,14 @@ class Server:
     async def cmd_router(self, msg, userid, channel):
         content = str(msg.content)
         commands = [AcceptCmd,
+                    VersionCmd,
                     HelpCmd, CommandsCmd,
                     AfkCmd, StopAfkCmd,
                     WarnsCmd, WarnCmd,
                     PrefixCmd,
                     PermCmd,
-                    MuteCmd, UnmuteCmd]
+                    MuteCmd, UnmuteCmd,
+                    LangCmd]
 
         for cmd in commands:
             if content.startswith(self.cmd_prefix + cmd.name):
@@ -101,6 +107,7 @@ class Server:
         to_save = {
             'id': server.id,
             'name': server.name,
+            'lang': server.lang,
             'bot_text_channel_name': server.bot_text_channel_name,
             'log_text_channel_name': server.log_text_channel_name,
             'cmd_prefix': server.cmd_prefix,
@@ -121,10 +128,11 @@ class Server:
             loaded_server = json.loads(file)
             if loaded_server['id'] != server.id:
                 raise Exception(f"Can't load server {server.id} : IDs don't match !")
-            server.bot_text_channel_name = load_json_data(loaded_server, 'bot_text_channel_name', os.getenv('SRV_DEFAULT_BOT_TEXT_CHANNEL_NAME'))
-            server.log_text_channel_name = load_json_data(loaded_server, 'log_text_channel_name', os.getenv('SRV_DEFAULT_LOGS_TEXT_CHANNEL_NAME'))
-            server.cmd_prefix = load_json_data(loaded_server, 'cmd_prefix', os.getenv('SRV_DEFAULT_CMD_PREFIX_NAME'))
-            server.admin_logs = load_json_data(loaded_server, 'admin_logs', bool(os.getenv('SRV_DEFAULT_DISPLAY_ADMIN_LOGS')))
+            server.lang = load_json_data(loaded_server, 'lang', cfg.get_value('SRV_DEFAULT_LANG'))
+            server.bot_text_channel_name = load_json_data(loaded_server, 'bot_text_channel_name', cfg.get_value('SRV_DEFAULT_BOT_TEXT_CHANNEL_NAME'))
+            server.log_text_channel_name = load_json_data(loaded_server, 'log_text_channel_name', cfg.get_value('SRV_DEFAULT_LOGS_TEXT_CHANNEL_NAME'))
+            server.cmd_prefix = load_json_data(loaded_server, 'cmd_prefix', cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME'))
+            server.admin_logs = load_json_data(loaded_server, 'admin_logs', bool(cfg.get_value('SRV_DEFAULT_DISPLAY_ADMIN_LOGS')))
             server.group_perks = load_json_data(loaded_server, 'group_perks', {})
             for key, member in server.members.items():
                 for json_member in load_json_data(loaded_server, 'members', []):
