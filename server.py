@@ -8,7 +8,7 @@ import json
 from utils import load_json_data, myconverter
 import threading
 
-from cmds.cmd_accept import AcceptCmd
+from cmds.cmd_accept import AcceptCmd, ToggleAcceptCmd, AcceptGroupCmd
 from cmds.cmd_version import VersionCmd
 from cmds.cmd_help import HelpCmd, CommandsCmd
 from cmds.cmd_warn import WarnCmd
@@ -19,7 +19,10 @@ from cmds.cmd_prefix import PrefixCmd
 from cmds.cmd_perm import PermCmd
 from cmds.cmd_mute import MuteCmd
 from cmds.cmd_unmute import UnmuteCmd
+from cmds.cmd_deafen import DeafenCmd
+from cmds.cmd_undeafen import UndeafenCmd
 from cmds.cmd_lang import LangCmd
+from cmds.cmd_xp import XpCmd
 
 
 class Server:
@@ -37,6 +40,8 @@ class Server:
         self.admin_logs = bool(cfg.get_value('SRV_DEFAULT_DISPLAY_ADMIN_LOGS'))
         self.members = {}
         self.group_perks = {}
+        self.accept_rank = cfg.get_value('SRV_DEFAULT_ACCEPT_RANK')
+        self.use_accept_command = bool(cfg.get_value('SRV_DEFAULT_USE_ACCEPT_COMMAND'))
         for member in guild.members:
             self.members[member.id] = User(member)
 
@@ -49,10 +54,12 @@ class Server:
     async def user_voice_moved(self, userid, before, after):
         user = self.members[userid]
         if after.id == self.afk_channel_id:
+            self.members[userid].active_since = None
             await self.print_admin_log(f'{User.get_at_mention(user.id)} ({ user.id }) moved from :sound:**{before.name}** and is now :zzz:**AFK**')
             if user.afk_mentions is True:
                 await self.get_bot_text_channel().send(Lang.get('USER_IS_AFK', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(user.id)))
         elif before.id == self.afk_channel_id:
+            self.members[userid].active_since = datetime.datetime.now()
             await self.print_admin_log(f'{User.get_at_mention(user.id)} ({user.id}) moved to :loud_sound:**{after.name}** and is no longer ~~**afk**~~')
             if user.afk_mentions is True:
                 await self.get_bot_text_channel().send(Lang.get('USER_NO_MORE_AFK', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(user.id)))
@@ -63,12 +70,19 @@ class Server:
         await self.print_admin_log(
             f'{User.get_at_mention(userid)} ({userid}) connected to :loud_sound:**{channel.name}**')
         if userid in self.members.keys():
+            self.members[userid].active_since = datetime.datetime.now()
             if self.members[userid].muted is True:
                 await self.guild.get_member(userid).edit(mute=True)
             else:
                 await self.guild.get_member(userid).edit(mute=False)
+            if self.members[userid].deaf is True:
+                await self.guild.get_member(userid).edit(deafen=True)
+            else:
+                await self.guild.get_member(userid).edit(deafen=False)
 
     async def user_voice_disconnected(self, userid, channel):
+        if userid in self.members.keys():
+            self.members[userid].active_since = None
         await self.print_admin_log(
             f'{User.get_at_mention(userid)} ({userid}) disconnected from :sound:**{channel.name}**')
 
@@ -81,7 +95,7 @@ class Server:
     ### COMMANDS ###
     async def cmd_router(self, msg, userid, channel):
         content = str(msg.content)
-        commands = [AcceptCmd,
+        commands = [ToggleAcceptCmd, AcceptGroupCmd, AcceptCmd,
                     VersionCmd,
                     HelpCmd, CommandsCmd,
                     AfkCmd, StopAfkCmd,
@@ -89,10 +103,14 @@ class Server:
                     PrefixCmd,
                     PermCmd,
                     MuteCmd, UnmuteCmd,
-                    LangCmd]
+                    DeafenCmd, UndeafenCmd,
+                    LangCmd,
+                    XpCmd]
 
+        found_valid_command = False
         for cmd in commands:
-            if content.startswith(self.cmd_prefix + cmd.name):
+            if content == self.cmd_prefix + cmd.name or content.startswith(self.cmd_prefix + cmd.name + ' '):
+                found_valid_command = True
                 if await cmd.run_cmd(self, userid, channel, msg) is True:
                     await self.print_admin_log(
                         f"{User.get_at_mention(userid)} used **{self.cmd_prefix}{cmd.name}** command (||{msg.content}||)")
@@ -100,6 +118,8 @@ class Server:
                     await self.print_admin_log(
                         f"{User.get_at_mention(userid)} tried to use **{self.cmd_prefix}{cmd.name}** command but failed (||{msg.content}||)")
                 break
+        if not found_valid_command and content.startswith(self.cmd_prefix):
+            await channel.send(Lang.get('UNKNOWN_CMD', self.lang).format(content, self.cmd_prefix))
 
     ### SAVE AND LOAD ###
     @staticmethod
@@ -113,6 +133,8 @@ class Server:
             'cmd_prefix': server.cmd_prefix,
             'admin_logs': server.admin_logs,
             'group_perks': server.group_perks,
+            'use_accept': server.use_accept_command,
+            'accept_rank': server.accept_rank,
             'members': [json.loads(User.to_json(member)) for key, member in server.members.items()]
         }
         json_to_save = json.dumps(to_save, default=myconverter)
@@ -134,6 +156,8 @@ class Server:
             server.cmd_prefix = load_json_data(loaded_server, 'cmd_prefix', cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME'))
             server.admin_logs = load_json_data(loaded_server, 'admin_logs', bool(cfg.get_value('SRV_DEFAULT_DISPLAY_ADMIN_LOGS')))
             server.group_perks = load_json_data(loaded_server, 'group_perks', {})
+            server.use_accept_command = load_json_data(loaded_server, 'use_accept', bool(cfg.get_value('SRV_DEFAULT_USE_ACCEPT_COMMAND')))
+            server.use_accept_command = load_json_data(loaded_server, 'accept_rank', cfg.get_value('SRV_DEFAULT_ACCEPT_RANK'))
             for key, member in server.members.items():
                 for json_member in load_json_data(loaded_server, 'members', []):
                     if load_json_data(json_member, 'id', -1) == member.id:

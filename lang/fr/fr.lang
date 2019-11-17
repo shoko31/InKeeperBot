@@ -1,12 +1,18 @@
 {
+    "YES": "Oui",
+    "NO": "Non",
+
     "USER_IS_AFK": "#USER# est parti boire une p'tite bière :beer: !",
     "USER_NO_MORE_AFK": "#USER# Alors ? Elle était bonne cette :beer: ?",
 
     "MISSING_PERM": ":octagonal_sign: Désolé #USER#, mais tu n'as pas les permissions requises pour executer cette commande !",
+    "CMD_WRONG_SYNTAX": "La syntaxe est incorrecte !",
+    "UNKNOWN_CMD": "La commande `{0}` n'est pas valide. (essaie `{1}help`)",
 
     "CMD_LANG_SET": "La langue est maintenant `{0}`.",
     "CMD_LANG_GET": "La langue actuelle est `{0}`.",
-
     "CMD_AFK": "C'est noté #USER# ! Tu seras de nouveau mentionné AFK!",
-    "CMD_STOPAFK": "C'est noté #USER# ! Tu ne seras plus mentionné AFK!"
+    "CMD_STOPAFK": "C'est noté #USER# ! Tu ne seras plus mentionné AFK!",
+    "CMD_ACCEPT_TOGGLE": "Utilisation de la commande `{1}accept`: {0}",
+    "CMD_ACCEPT_GROUP_SET": "Le groupe {0} sera maintenant attribué après l'utilisation de la commande `{1}accept`"
 }

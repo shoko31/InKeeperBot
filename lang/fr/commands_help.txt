@@ -5,13 +5,18 @@
 - **#CMDPREFIX#afk** : active les mentions funs lorsque tu es AFK sur un serveur
 - **#CMDPREFIX#stopafk** : désactive les mentions funs lorsque tu es AFK sur un serveur
 - **#CMDPREFIX#warns** : affiche les avertissements que tu as reçu
+- **#CMDPREFIX#xp** : affiche tes points d'expérience
 
 - **#CMDPREFIX#prefix** : affiche le prefix utilisé pour les commandes (par défaut: `!!`)
 - **#CMDPREFIX#prefix <prefix>** : change le prefix utilisé pour les commandes (par défaut: `!!`)
 - **#CMDPREFIX#warns <users>** : affiche les avertissements reçus
-- **#CMDPREFIX#warn <users> <reason>** : Donne un avertissement aux utilisateurs mentionnés
-- **#CMDPREFIX#mute <users> (<time>)** : Empêche les utilisateurs de parler (pendant X secondes)
-- **#CMDPREFIX#unmute <users>** : Suspend la restriction de parole
+- **#CMDPREFIX#warn <users> <reason>** : donne un avertissement aux utilisateurs mentionnés
+- **#CMDPREFIX#mute <users> (<time>)** : empêche les utilisateurs de parler (pendant X secondes)
+- **#CMDPREFIX#unmute <users>** : suspend la restriction de parole
+- **#CMDPREFIX#deaf <users> (<time>)** : empêche les utilisateurs d'entendre (pendant X secondes)
+- **#CMDPREFIX#undeaf <users>** : suspend la restriction d'écoute
 
-- **#CMDPREFIX#lang <lang_key>** : Changes la langue du bot sur le serveur
-- **#CMDPREFIX#perm <groups> <perms>** : Ajoute/Suprime les permissions aux groupes
+- **#CMDPREFIX#lang <lang_key>** : change la langue du bot sur le serveur
+- **#CMDPREFIX#toggleaccept** : active/désactive l'utilisation de la commande `#CMDPREFIX#accept`
+- **#CMDPREFIX#acceptgroup <group>** : définie le groupe pour la commande `#CMDPREFIX#accept`
+- **#CMDPREFIX#perm <groups> <perms>** : ajoute/supprime les permissions aux groupes

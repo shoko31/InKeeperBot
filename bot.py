@@ -1,6 +1,7 @@
 # bot.py
 import os
 import asyncio
+import math
 import discord
 import threading
 from config import cfg
@@ -8,14 +9,13 @@ from dotenv import load_dotenv
 from server import *
 from discord.utils import find
 from utils import bot_id
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import sleep
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 textfile_user_mention_tag = cfg.get_value('TEXTFILE_USER_MENTION')
 textfile_bot_mention_tag = cfg.get_value('TEXTFILE_BOT_MENTION')
-
 client = discord.Client()
 servers = {}
 background_loop_thread = None
@@ -26,26 +26,56 @@ client.activity = discord.Activity(name=dm_help_cmd, details=dm_help_cmd, state=
 
 loop = asyncio.get_event_loop()
 
+def check_mute_user(server, member, current_time):
+    if member.muted and member.muted_until is not None:
+        if member.muted_until <= current_time:
+            member.lock.acquire()
+            srv_user = server.guild.get_member(member.id)
+            member.muted_until = None
+            member.muted = False
+            if srv_user is not None and srv_user.voice is not None:
+                unmute_result = asyncio.run_coroutine_threadsafe(srv_user.edit(mute=False), loop)
+                unmute_result.result()
+            member.lock.release()
 
-def check_muted_members(server):
+def check_deafen_user(server, member, current_time):
+    if member.deaf and member.deaf_until is not None:
+        if member.deaf_until <= current_time:
+            member.lock.acquire()
+            srv_user = server.guild.get_member(member.id)
+            member.deaf_until = None
+            member.deaf = False
+            if srv_user is not None and srv_user.voice is not None:
+                unmute_result = asyncio.run_coroutine_threadsafe(srv_user.edit(deafen=False), loop)
+                unmute_result.result()
+            member.lock.release()
+
+def grant_connected_user_xp(server, member, current_time):
+    if member.active_since is not None:
+        differ_time = member.last_active_xp
+        if member.last_active_xp is None:
+            differ_time = member.active_since
+        diff_since_last_xp = math.floor((current_time - differ_time).total_seconds() / 3600.0)
+        if diff_since_last_xp >= 1:
+            member.lock.acquire()
+            member.xp = member.xp + diff_since_last_xp
+            differ_time = differ_time + timedelta(Hours=diff_since_last_xp)
+            member.last_active_xp = differ_time
+            member.lock.release()
+
+
+def background_server_checks(server):
     current_time = datetime.now()
     for key, member in server.members.items():
-        if member.muted and member.muted_until is not None:
-            if member.muted_until <= current_time:
-                member.lock.acquire()
-                srv_user = server.guild.get_member(member.id)
-                if srv_user is not None and srv_user.voice is not None:
-                    member.muted_until = None
-                    member.muted = False
-                    unmute_result = asyncio.run_coroutine_threadsafe(srv_user.edit(mute=False), loop)
-                    unmute_result.result()
-                member.lock.release()
+        check_mute_user(server, member, current_time)
+        check_deafen_user(server, member, current_time)
+        grant_connected_user_xp(server, member, current_time)
 
 
 def background_loop():
     while 1:
         for key, server in servers.items():
-            check_muted_members(server)
+            background_server_checks(server)
         sleep(1)
 
 

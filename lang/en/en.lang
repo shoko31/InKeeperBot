@@ -1,12 +1,18 @@
 {
+    "YES": "Yes",
+    "NO": "No",
+
     "USER_IS_AFK": "#USER# is having a small beer :beer: !",
     "USER_NO_MORE_AFK": "#USER# So ? How was that beer :beer: ?",
 
     "MISSING_PERM": ":octagonal_sign: Sorry #USER#, but you don't have the right permissions to use this command !",
+    "CMD_WRONG_SYNTAX": "Invalid syntax !",
+    "UNKNOWN_CMD": "`{0}` is not a valid command. (try using `{1}help`)",
 
     "CMD_LANG_SET": "Language set to `{0}`",
     "CMD_LANG_GET": "Current language is `{0}`.",
-
     "CMD_AFK": "Alright #USER# ! You'll now be mentioned AFK!",
-    "CMD_STOPAFK": "Alright #USER# ! You'll not be mentioned AFK anymore!"
+    "CMD_STOPAFK": "Alright #USER# ! You'll not be mentioned AFK anymore!",
+    "CMD_ACCEPT_TOGGLE": "Using `{1}accept` command: {0}",
+    "CMD_ACCEPT_GROUP_SET": "Group {0} will now be granted after using the `{1}accept` command"
 }

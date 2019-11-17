@@ -6,6 +6,7 @@ class PerksClass:
     def __init__(self):
         self.perks = [
             'cmd.version',
+            'cmd.accept.toggle', 'cmd.accept.set'
             'cmd.afk', 'cmd.stopafk',
             'cmd.help', 'cmd.commands'
             'cmd.perm', 'cmd.perm.display', 'cmd.perm.change',
@@ -13,13 +14,24 @@ class PerksClass:
             'cmd.warn',
             'cmd.warns', 'cmd.warns.self', 'cmd.warns.other',
             'cmd.mute', 'cmd.unmute',
-            'cmd.lang', 'cmd.lang.display', 'cmd.lang.change'
+            'cmd.deafen', 'cmd.undeafen',
+            'cmd.lang', 'cmd.lang.display', 'cmd.lang.change',
+            'cmd.xp', 'cmd.xp.give', 'cmd.xp.display', 'cmd.xp.display.other', 'cmd.xp.display.self'
         ]
 
         self.groups = {
-            'group.admin': ['cmd.version', 'cmd.afk', 'cmd.stopafk', 'cmd.help', 'cmd.commands', 'cmd.perm', 'cmd.prefix', 'cmd.warn', 'cmd.warns', 'cmd.mute', 'cmd.unmute', 'cmd.lang'],
-            'group.moderator': ['cmd.afk', 'cmd.stopafk', 'cmd.help', 'cmd.commands', 'cmd.prefix.display', 'cmd.warn', 'cmd.warns', 'cmd.mute', 'cmd.unmute', 'cmd.lang.display'],
-            'group.user': ['cmd.afk', 'cmd.stopafk', 'cmd.help', 'cmd.commands', 'cmd.prefix.display', 'cmd.warns.self'],
+            'group.admin': [
+                'cmd.version', 'cmd.accept.toggle', 'cmd.accept.set', 'cmd.afk', 'cmd.stopafk', 'cmd.help', 'cmd.commands', 'cmd.perm',
+                'cmd.prefix', 'cmd.warn', 'cmd.warns', 'cmd.mute', 'cmd.unmute', 'cmd.deafen', 'cmd.undeafen', 'cmd.lang', 'cmd.xp'
+            ],
+            'group.moderator': [
+                'cmd.afk', 'cmd.stopafk', 'cmd.help', 'cmd.commands', 'cmd.prefix.display', 'cmd.warn', 'cmd.warns',
+                'cmd.mute', 'cmd.unmute', 'cmd.deafen', 'cmd.undeafen', 'cmd.lang.display', 'cmd.xp.display'
+            ],
+            'group.user': [
+                'cmd.afk', 'cmd.stopafk', 'cmd.help', 'cmd.commands', 'cmd.prefix.display',
+                'cmd.warns.self', 'cmd.xp.display.self'
+            ],
             'group.guest': ['cmd.help', 'cmd.commands']
         }
 

@@ -18,6 +18,12 @@ class User:
         self.xp = 0
         self.muted = False
         self.muted_until = None
+        self.deaf = False
+        self.deaf_until = None
+        self.active_since = None
+        if discord_user.voice is not None and discord_user.voice.afk is False:
+            self.active_since = datetime.datetime.now()
+        self.last_active_xp = None
         self.warnings = []
 
     def get_display_name(self):
@@ -49,6 +55,8 @@ class User:
             'xp': user.xp,
             'muted': user.muted,
             'muted_until': user.muted_until,
+            'deaf': user.deaf,
+            'deaf_until': user.deaf_until,
             'warnings': user.warnings
         }
         return json.dumps(save_user, default=myconverter)
@@ -61,7 +69,11 @@ class User:
         user.xp = load_json_data(json_object, 'xp', 0)
         user.muted = bool(load_json_data(json_object, 'muted', False))
         user.muted_until = load_json_data(json_object, 'muted_until', None)
+        user.deaf = bool(load_json_data(json_object, 'deaf', False))
+        user.deaf_until = load_json_data(json_object, 'deaf_until', None)
         if user.muted_until is not None:
             user.muted_until = datetime.datetime.strptime(user.muted_until, '%a %b %d %H:%M:%S %Y')
+        if user.deaf_until is not None:
+            user.deaf_until = datetime.datetime.strptime(user.deaf_until, '%a %b %d %H:%M:%S %Y')
         user.warnings = load_json_data(json_object, 'warnings', [])
         return user
