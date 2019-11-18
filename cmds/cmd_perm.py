@@ -18,7 +18,7 @@ async def cmd_set_perm(server, userid, channel, message):
                 old_perks = [perk for perk in server.group_perks[str(role.id)] if perk not in add_perks and perk not in remove_perks]
                 add_perks = old_perks + add_perks
             server.group_perks[str(role.id)] = add_perks
-        await channel.send(f"Permissions added for {' '.join([r.mention for r in message.role_mentions])}")
+        await channel.send(f"Permissions updated for {' '.join([r.mention for r in message.role_mentions])}")
         return True
 
 

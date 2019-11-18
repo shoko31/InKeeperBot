@@ -70,7 +70,11 @@ class Server:
         await self.print_admin_log(
             f'{User.get_at_mention(userid)} ({userid}) connected to :loud_sound:**{channel.name}**')
         if userid in self.members.keys():
-            self.members[userid].active_since = datetime.datetime.now()
+            member = self.members[userid]
+            member.last_login = datetime.datetime.now()
+            member.active_since = datetime.datetime.now()
+            if member.check_daily_reward() is True:
+                await self.get_bot_text_channel().send(Lang.get('DAILY_XP_REWARD', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(userid)).format(cfg.get_value('DAILY_REWARD_XP')))
             if self.members[userid].muted is True:
                 await self.guild.get_member(userid).edit(mute=True)
             else:

@@ -5,6 +5,8 @@
     "USER_IS_AFK": "#USER# is having a small beer :beer: !",
     "USER_NO_MORE_AFK": "#USER# So ? How was that beer :beer: ?",
 
+    "DAILY_XP_REWARD": "#USER# just logged in and received his daily reward : {0}xp",
+
     "MISSING_PERM": ":octagonal_sign: Sorry #USER#, but you don't have the right permissions to use this command !",
     "CMD_WRONG_SYNTAX": "Invalid syntax !",
     "UNKNOWN_CMD": "`{0}` is not a valid command. (try using `{1}help`)",

@@ -1,6 +1,7 @@
 # user.py
 
 import json
+from config import cfg
 from utils import load_json_data, myconverter
 import datetime
 import threading
@@ -24,6 +25,8 @@ class User:
         if discord_user.voice is not None and discord_user.voice.afk is False:
             self.active_since = datetime.datetime.now()
         self.last_active_xp = None
+        self.last_login = None
+        self.last_daily_reward = None
         self.warnings = []
 
     def get_display_name(self):
@@ -39,6 +42,14 @@ class User:
             for warning in self.warnings:
                 await channel.send(f"- {warning}")
 
+    def check_daily_reward(self):
+        now = datetime.datetime.now()
+        if self.last_daily_reward is None or (now - self.last_daily_reward).total_seconds() >= 86400:
+            self.last_daily_reward = now
+            self.xp += cfg.get_value('DAILY_REWARD_XP')
+            return True
+        return False
+
     @staticmethod
     def get_at_mention(userid):
         return '<@' + str(userid) + '>'
@@ -53,6 +64,8 @@ class User:
             'discriminator': user.discriminator,
             'afk_mentions': user.afk_mentions,
             'xp': user.xp,
+            'last_login': user.last_login,
+            'last_daily_reward': user.last_daily_reward,
             'muted': user.muted,
             'muted_until': user.muted_until,
             'deaf': user.deaf,
@@ -67,10 +80,16 @@ class User:
             raise Exception(f"Can't load user {user.id} : IDs don't match !")
         user.afk_mentions = load_json_data(json_object, 'afk_mentions', True)
         user.xp = load_json_data(json_object, 'xp', 0)
+        user.last_login = load_json_data(json_object, 'last_login', None)
+        user.last_daily_reward = load_json_data(json_object, 'last_daily_reward', None)
         user.muted = bool(load_json_data(json_object, 'muted', False))
         user.muted_until = load_json_data(json_object, 'muted_until', None)
         user.deaf = bool(load_json_data(json_object, 'deaf', False))
         user.deaf_until = load_json_data(json_object, 'deaf_until', None)
+        if user.last_login is not None:
+            user.last_login = datetime.datetime.strptime(user.last_login, '%a %b %d %H:%M:%S %Y')
+        if user.last_daily_reward is not None:
+            user.last_daily_reward = datetime.datetime.strptime(user.last_login, '%a %b %d %H:%M:%S %Y')
         if user.muted_until is not None:
             user.muted_until = datetime.datetime.strptime(user.muted_until, '%a %b %d %H:%M:%S %Y')
         if user.deaf_until is not None:
