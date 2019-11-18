@@ -16,13 +16,15 @@ class PerksClass:
             'cmd.mute', 'cmd.unmute',
             'cmd.deafen', 'cmd.undeafen',
             'cmd.lang', 'cmd.lang.display', 'cmd.lang.change',
-            'cmd.xp', 'cmd.xp.give', 'cmd.xp.display', 'cmd.xp.display.other', 'cmd.xp.display.self'
+            'cmd.xp', 'cmd.xp.give', 'cmd.xp.display', 'cmd.xp.display.other', 'cmd.xp.display.self',
+            'cmd.tft'
         ]
 
         self.groups = {
             'group.admin': [
                 'cmd.version', 'cmd.accept.toggle', 'cmd.accept.set', 'cmd.afk', 'cmd.stopafk', 'cmd.help', 'cmd.commands', 'cmd.perm',
-                'cmd.prefix', 'cmd.warn', 'cmd.warns', 'cmd.mute', 'cmd.unmute', 'cmd.deafen', 'cmd.undeafen', 'cmd.lang', 'cmd.xp'
+                'cmd.prefix', 'cmd.warn', 'cmd.warns', 'cmd.mute', 'cmd.unmute', 'cmd.deafen', 'cmd.undeafen', 'cmd.lang', 'cmd.xp',
+                'cmd.tft'
             ],
             'group.moderator': [
                 'cmd.afk', 'cmd.stopafk', 'cmd.help', 'cmd.commands', 'cmd.prefix.display', 'cmd.warn', 'cmd.warns',

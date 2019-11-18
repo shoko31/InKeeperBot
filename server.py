@@ -23,6 +23,7 @@ from cmds.cmd_deafen import DeafenCmd
 from cmds.cmd_undeafen import UndeafenCmd
 from cmds.cmd_lang import LangCmd
 from cmds.cmd_xp import XpCmd
+from cmds.cmd_tft import TFTCmd
 
 
 class Server:
@@ -109,7 +110,8 @@ class Server:
                     MuteCmd, UnmuteCmd,
                     DeafenCmd, UndeafenCmd,
                     LangCmd,
-                    XpCmd]
+                    XpCmd,
+                    TFTCmd]
 
         found_valid_command = False
         for cmd in commands:

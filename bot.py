@@ -59,7 +59,7 @@ def grant_connected_user_xp(server, member, current_time):
         if diff_since_last_xp >= 1:
             member.lock.acquire()
             member.xp = member.xp + (diff_since_last_xp * cfg.get_value('HOUR_ACTIVITY_REWARD_XP'))
-            differ_time = differ_time + timedelta(Hours=diff_since_last_xp)
+            differ_time = differ_time + timedelta(hours=diff_since_last_xp)
             member.last_active_xp = differ_time
             member.lock.release()
 

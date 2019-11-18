@@ -89,7 +89,7 @@ class User:
         if user.last_login is not None:
             user.last_login = datetime.datetime.strptime(user.last_login, '%a %b %d %H:%M:%S %Y')
         if user.last_daily_reward is not None:
-            user.last_daily_reward = datetime.datetime.strptime(user.last_login, '%a %b %d %H:%M:%S %Y')
+            user.last_daily_reward = datetime.datetime.strptime(user.last_daily_reward, '%a %b %d %H:%M:%S %Y')
         if user.muted_until is not None:
             user.muted_until = datetime.datetime.strptime(user.muted_until, '%a %b %d %H:%M:%S %Y')
         if user.deaf_until is not None:

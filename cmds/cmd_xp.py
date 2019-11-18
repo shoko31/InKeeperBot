@@ -18,7 +18,7 @@ async def cmd_xp(server, userid, channel, message):
 
 
 XpDisplaySelfCmd = ServerCmd('xpself', cmd_user_xp_get)
-XpDisplaySelfCmd.required_perks = ['cmd.xp.self']
+XpDisplaySelfCmd.required_perks = ['cmd.xp', 'cmd.xp.display', 'cmd.xp.self']
 
 XpCmd = ServerCmd('xp', cmd_xp)
 XpCmd.required_perks = ['cmd.xp', 'cmd.xp.give', 'cmd.xp.display', 'cmd.xp.display.other', 'cmd.xp.display.self']
