@@ -5,6 +5,7 @@ from config import cfg
 from lang.lang import Lang
 from discord.utils import find
 import json
+import os
 from utils import load_json_data, myconverter
 import threading
 
@@ -144,6 +145,8 @@ class Server:
             'members': [json.loads(User.to_json(member)) for key, member in server.members.items()]
         }
         json_to_save = json.dumps(to_save, default=myconverter)
+        if not os.path.exists('./saves/'):
+            os.makedirs('./saves/')
         with open('./saves/' + str(server.id) + '.save', 'w') as fp:
             fp.write(json_to_save)
 
