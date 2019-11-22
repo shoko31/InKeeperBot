@@ -1,5 +1,6 @@
 # bot.py
 import os
+import signal
 import asyncio
 import math
 import discord
@@ -153,14 +154,20 @@ async def on_disconnect():
 
 #client.run(token)
 
+def catch_sigterm():
+    loop.run_until_complete(client.logout())
+    loop.close()
+    print('Exited carefully')
+
+signal.signal(signal.SIGTERM, catch_sigterm())
+
 try:
     loop.run_until_complete(client.login(token))
     loop.run_until_complete(client.connect())
     while True:
         pass
-#except KeyboardInterrupt:
-    #loop.run_until_complete(client.logout())
+except KeyboardInterrupt:
+    loop.run_until_complete(client.logout())
     # cancel all tasks lingering
 finally:
-    loop.run_until_complete(client.logout())
     loop.close()
