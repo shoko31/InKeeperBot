@@ -158,8 +158,9 @@ try:
     loop.run_until_complete(client.connect())
     while True:
         pass
-except KeyboardInterrupt:
-    loop.run_until_complete(client.logout())
+#except KeyboardInterrupt:
+    #loop.run_until_complete(client.logout())
     # cancel all tasks lingering
 finally:
+    loop.run_until_complete(client.logout())
     loop.close()
