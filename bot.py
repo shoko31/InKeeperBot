@@ -178,6 +178,7 @@ async def on_disconnect():
 # finally:
 #     loop.close()
 
+import time
 
 class GracefulKiller:
   kill_now = False
@@ -189,12 +190,16 @@ class GracefulKiller:
     self.kill_now = True
 
 if __name__ == '__main__':
-  killer = GracefulKiller()
-  loop.run_until_complete(client.login(token))
-  loop.run_until_complete(client.connect())
-  while not killer.kill_now:
-    pass
-  loop.run_until_complete(client.logout())
-  loop.close()
+    killer = GracefulKiller()
+    loop.run_until_complete(client.login(token))
+    loop.run_until_complete(client.connect())
+    while not killer.kill_now:
+        time.sleep(1)
+        print("DOING SOMETHING")
+        pass
+    print("SHUTTING DOWN...")
+    loop.run_until_complete(client.logout())
+    print("CLOSED")
+    loop.close()
 
-  print("End of the program. I was killed gracefully :)")
+print("End of the program. I was killed gracefully :)")
