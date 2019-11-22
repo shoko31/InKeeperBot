@@ -188,7 +188,7 @@ class GracefulKiller:
 
   def exit_gracefully(self,signum, frame):
     self.kill_now = True
-    [t.cancel() for t in asyncio.all_tasks()]
+    [t.cancel() for t in asyncio.tasks.all_tasks()]
 
 if __name__ == '__main__':
     killer = GracefulKiller()
@@ -199,7 +199,7 @@ if __name__ == '__main__':
         print("DOING SOMETHING")
         pass
     print("SHUTTING DOWN...")
-    [t.cancel() for t in asyncio.all_tasks()]
+    [t.cancel() for t in asyncio.tasks.all_tasks()]
     loop.run_until_complete(client.logout())
     print("CLOSED")
     loop.close()
