@@ -154,8 +154,11 @@ async def on_disconnect():
 
 #client.run(token)
 
+keepRunning = True
 
 def catch_sigterm(signum, frame):
+    global keepRunning
+    keepRunning = False
     loop.run_until_complete(client.logout())
     loop.close()
     print('Exited carefully')
@@ -167,7 +170,7 @@ signal.signal(signal.SIGTERM, catch_sigterm)
 try:
     loop.run_until_complete(client.login(token))
     loop.run_until_complete(client.connect())
-    while True:
+    while keepRunning is True:
         pass
 except KeyboardInterrupt:
     loop.run_until_complete(client.logout())
