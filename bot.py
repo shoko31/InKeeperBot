@@ -198,6 +198,7 @@ if __name__ == '__main__':
         print("DOING SOMETHING")
         pass
     print("SHUTTING DOWN...")
+    [t.cancel() for t in asyncio.all_tasks()]
     loop.run_until_complete(client.logout())
     print("CLOSED")
     loop.close()
