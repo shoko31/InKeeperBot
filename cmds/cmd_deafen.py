@@ -11,7 +11,7 @@ async def cmd_deafen(server, userid, channel, message):
     split_content = str(message.content).split()
     if len(message.mentions) < 1:
         await channel.send(Lang.get('CMD_WRONG_SYNTAX', server.lang))
-        await channel.send(f"`{server.cmd_prefix}deaf <users> (<time>)`")
+        await channel.send(f"`{server.cmd_prefix}deafen <users> (<time>)`")
         return False
     time = -1
     if len(split_content) > len(message.mentions) + 1:

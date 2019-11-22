@@ -13,8 +13,8 @@
 - **#CMDPREFIX#warn <users> <reason>** : gives a warning to specified users
 - **#CMDPREFIX#mute <users> (<time>)** : prevents specified users from speaking (for X seconds)
 - **#CMDPREFIX#unmute <users>** : cancels speaking prevention for specified users
-- **#CMDPREFIX#deaf <users> (<time>)** : prevents specified users from listening (for X secondes)
-- **#CMDPREFIX#undeaf <users>** : cancels listening prevention for specified users
+- **#CMDPREFIX#deafen <users> (<time>)** : prevents specified users from listening (for X secondes)
+- **#CMDPREFIX#undeafen <users>** : cancels listening prevention for specified users
 
 - **#CMDPREFIX#lang <lang_key>** : changes the bot language on the server
 - **#CMDPREFIX#toggleaccept** : enables/disables usage of `#CMDPREFIX#accept` command

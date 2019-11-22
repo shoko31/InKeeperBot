@@ -8,6 +8,7 @@ import json
 import os
 from utils import load_json_data, myconverter
 import threading
+from db import db
 
 from cmds.cmd_accept import AcceptCmd, ToggleAcceptCmd, AcceptGroupCmd
 from cmds.cmd_version import VersionCmd
@@ -145,17 +146,21 @@ class Server:
             'members': [json.loads(User.to_json(member)) for key, member in server.members.items()]
         }
         json_to_save = json.dumps(to_save, default=myconverter)
-        if not os.path.exists('./saves/'):
-            os.makedirs('./saves/')
-        with open('./saves/' + str(server.id) + '.save', 'w') as fp:
-            fp.write(json_to_save)
+        db.update_server(server.id, json_to_save)
+        ##if not os.path.exists('./saves/'):
+        ##    os.makedirs('./saves/')
+        ##with open('./saves/' + str(server.id) + '.save', 'w') as fp:
+        ##    fp.write(json_to_save)
 
     @staticmethod
     def load(server):
         try:
-            fp = open('./saves/' + str(server.id) + '.save', 'r')
-            file = fp.read()
-            fp.close()
+            #fp = open('./saves/' + str(server.id) + '.save', 'r')
+            #file = fp.read()
+            #fp.close()
+            file = db.get_server(server.id)
+            if file is None:
+                return False
             loaded_server = json.loads(file)
             if loaded_server['id'] != server.id:
                 raise Exception(f"Can't load server {server.id} : IDs don't match !")

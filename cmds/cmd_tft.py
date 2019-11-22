@@ -32,12 +32,13 @@ async def cmd_tft(server, userid, channel, message):
         await msg.delete()
         await channel.send(f"No TFT game found for {loaded_tft_user.name}")
     else:
-        for i in range(0, 5):
+        games_count = len(loaded_tft_user.games)
+        for i in range(0, min(5, games_count)):
             game = loaded_tft_user.games[i]
             if game.loaded is False:
                 game.load()
         games_msg = f"Last 5 TFT games for {loaded_tft_user.name}"
-        for i in range(0, 5):
+        for i in range(0, min(5, games_count)):
             game = loaded_tft_user.games[i]
             participant = game.get_participant(loaded_tft_user.puuid)
             games_msg += "\r\n"
