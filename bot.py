@@ -182,9 +182,11 @@ if __name__ == '__main__':
         loop.run_until_complete(client.logout())
         # cancel all tasks lingering
     except asyncio.CancelledError:
-        loop.run_until_complete(client.logout())
+        print('Saving servers...')
         for key, server in servers.items():
             Server.save(server)
+        print('server saved!')
+        loop.run_until_complete(client.logout())
         # cancel all tasks lingering
     finally:
         loop.close()
