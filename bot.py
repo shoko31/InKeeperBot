@@ -154,26 +154,47 @@ async def on_disconnect():
 
 #client.run(token)
 
-keepRunning = True
+# keepRunning = True
+#
+# def catch_sigterm(signum, frame):
+#     global keepRunning
+#     keepRunning = False
+#     loop.run_until_complete(client.logout())
+#     loop.close()
+#     print('Exited carefully')
+#     exit(0)
+#
+#
+# signal.signal(signal.SIGTERM, catch_sigterm)
+#
+# try:
+#     loop.run_until_complete(client.login(token))
+#     loop.run_until_complete(client.connect())
+#     while keepRunning is True:
+#         pass
+# except KeyboardInterrupt:
+#     loop.run_until_complete(client.logout())
+#     # cancel all tasks lingering
+# finally:
+#     loop.close()
 
-def catch_sigterm(signum, frame):
-    global keepRunning
-    keepRunning = False
-    loop.run_until_complete(client.logout())
-    loop.close()
-    print('Exited carefully')
-    exit(0)
 
+class GracefulKiller:
+  kill_now = False
+  def __init__(self):
+    signal.signal(signal.SIGINT, self.exit_gracefully)
+    signal.signal(signal.SIGTERM, self.exit_gracefully)
 
-signal.signal(signal.SIGTERM, catch_sigterm)
+  def exit_gracefully(self,signum, frame):
+    self.kill_now = True
 
-try:
-    loop.run_until_complete(client.login(token))
-    loop.run_until_complete(client.connect())
-    while keepRunning is True:
-        pass
-except KeyboardInterrupt:
-    loop.run_until_complete(client.logout())
-    # cancel all tasks lingering
-finally:
-    loop.close()
+if __name__ == '__main__':
+  killer = GracefulKiller()
+  loop.run_until_complete(client.login(token))
+  loop.run_until_complete(client.connect())
+  while not killer.kill_now:
+    pass
+  loop.run_until_complete(client.logout())
+  loop.close()
+
+  print("End of the program. I was killed gracefully :)")
