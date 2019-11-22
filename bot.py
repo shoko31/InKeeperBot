@@ -159,7 +159,8 @@ def catch_sigterm():
     loop.close()
     print('Exited carefully')
 
-signal.signal(signal.SIGTERM, catch_sigterm())
+
+signal.signal(signal.SIGTERM, catch_sigterm)
 
 try:
     loop.run_until_complete(client.login(token))
