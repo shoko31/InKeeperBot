@@ -154,7 +154,8 @@ async def on_disconnect():
 
 #client.run(token)
 
-def catch_sigterm():
+
+def catch_sigterm(signum, frame):
     loop.run_until_complete(client.logout())
     loop.close()
     print('Exited carefully')
