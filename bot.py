@@ -188,6 +188,7 @@ class GracefulKiller:
 
   def exit_gracefully(self,signum, frame):
     self.kill_now = True
+    [t.cancel() for t in asyncio.all_tasks()]
 
 if __name__ == '__main__':
     killer = GracefulKiller()
