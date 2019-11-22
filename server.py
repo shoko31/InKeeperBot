@@ -158,10 +158,9 @@ class Server:
             #fp = open('./saves/' + str(server.id) + '.save', 'r')
             #file = fp.read()
             #fp.close()
-            file = db.get_server(server.id)
-            if file is None:
+            loaded_server = db.get_server(server.id)
+            if loaded_server is None:
                 return False
-            loaded_server = json.loads(file)
             if loaded_server['id'] != server.id:
                 raise Exception(f"Can't load server {server.id} : IDs don't match !")
             server.lang = load_json_data(loaded_server, 'lang', cfg.get_value('SRV_DEFAULT_LANG'))
