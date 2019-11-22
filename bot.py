@@ -156,10 +156,8 @@ async def on_disconnect():
 
 
 def catch_sigterm(signum, frame):
+    loop.run_until_complete(client.logout())
     loop.close()
-    rloop = asyncio.new_event_loop()
-    rloop.run_until_complete(client.logout())
-    rloop.close()
     print('Exited carefully')
     exit(0)
 
