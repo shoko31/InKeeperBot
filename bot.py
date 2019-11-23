@@ -175,7 +175,7 @@ def catch_sigterm(signum, frame):
 if __name__ == '__main__':
 
     print("starting in 30seconds...")
-    #time.sleep(30)
+    time.sleep(30)
     print("starting now")
 
     signal.signal(signal.SIGTERM, catch_sigterm)
