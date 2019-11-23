@@ -10,8 +10,7 @@ from user import User
 async def cmd_deafen(server, userid, channel, message):
     split_content = str(message.content).split()
     if len(message.mentions) < 1:
-        await channel.send(Lang.get('CMD_WRONG_SYNTAX', server.lang))
-        await channel.send(f"`{server.cmd_prefix}deafen <users> (<time>)`")
+        await channel.send(f"{Lang.get('CMD_WRONG_SYNTAX', server.lang)}\r\n`{server.cmd_prefix}deafen <users> (<time>)`")
         return False
     time = -1
     if len(split_content) > len(message.mentions) + 1:
@@ -19,7 +18,6 @@ async def cmd_deafen(server, userid, channel, message):
     for mention in message.mentions:
         if mention.id not in server.members.keys():
             raise Exception(f'Cannot find user ({ mention.id }) in server')
-            pass
         server.members[mention.id].lock.acquire()
         server.members[mention.id].deaf = True
         if mention.voice is not None:

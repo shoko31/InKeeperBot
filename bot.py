@@ -130,7 +130,7 @@ async def on_voice_state_update(member, before, after):
         user = find(lambda m: m.name == str(member).split('#')[0], client.users)
         await server.user_voice_connected(user.id, after_channel)
 
-    if after.channel is None:
+    elif after.channel is None:
         before_channel = client.get_channel(before.channel.id)
         server = servers.get(before_channel.guild.id)
         if server is None:
@@ -138,7 +138,7 @@ async def on_voice_state_update(member, before, after):
         user = find(lambda m: m.name == str(member).split('#')[0], client.users)
         await server.user_voice_disconnected(user.id, before_channel)
 
-    if before.channel is not None and after.channel is not None and before.channel is not after.channel:
+    elif before.channel is not None and after.channel is not None and before.channel is not after.channel:
         before_channel = client.get_channel(before.channel.id)
         after_channel = client.get_channel(after.channel.id)
         server = servers.get(before_channel.guild.id)
@@ -146,6 +146,14 @@ async def on_voice_state_update(member, before, after):
             raise Exception("unknown server")
         user = find(lambda m: m.name == str(member).split('#')[0], client.users)
         await server.user_voice_moved(user.id, before_channel, after_channel)
+
+    elif before.channel is not None and after.channel is not None and before.channel is after.channel:
+        before_channel = client.get_channel(before.channel.id)
+        server = servers.get(before_channel.guild.id)
+        if server is None:
+            raise Exception("unknown server")
+        user = find(lambda m: m.name == str(member).split('#')[0], client.users)
+        await server.user_voice_state_updated(user.id, before_channel)
 
 @client.event
 async def on_disconnect():
@@ -167,7 +175,7 @@ def catch_sigterm(signum, frame):
 if __name__ == '__main__':
 
     print("starting in 30seconds...")
-    time.sleep(30)
+    #time.sleep(30)
     print("starting now")
 
     signal.signal(signal.SIGTERM, catch_sigterm)
@@ -179,6 +187,10 @@ if __name__ == '__main__':
         while keepRunning is True:
             pass
     except KeyboardInterrupt:
+        print('Saving servers...')
+        for key, server in servers.items():
+            Server.save(server)
+        print('server saved!')
         loop.run_until_complete(client.logout())
         # cancel all tasks lingering
     except asyncio.CancelledError:

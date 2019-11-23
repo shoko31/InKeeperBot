@@ -26,6 +26,7 @@ from cmds.cmd_undeafen import UndeafenCmd
 from cmds.cmd_lang import LangCmd
 from cmds.cmd_xp import XpCmd
 from cmds.cmd_tft import TFTCmd
+from cmds.cmd_force_save import ForceSaveCmd
 
 
 class Server:
@@ -93,6 +94,16 @@ class Server:
         await self.print_admin_log(
             f'{User.get_at_mention(userid)} ({userid}) disconnected from :sound:**{channel.name}**')
 
+    async def user_voice_state_updated(self, userid, channel):
+        if channel.id is not self.afk_channel_id and userid in self.members.keys():
+            member = self.members[userid]
+            guild_member = self.guild.get_member(userid)
+            voice_state = guild_member.voice
+            if voice_state.mute is False and member.muted is True:
+                await self.guild.get_member(userid).edit(mute=True)
+            if voice_state.deaf is False and member.deaf is True:
+                await self.guild.get_member(userid).edit(deafen=True)
+
     async def print_admin_log(self, msg):
         if self.admin_logs is True:
             log_channel = self.get_log_text_channel()
@@ -113,7 +124,8 @@ class Server:
                     DeafenCmd, UndeafenCmd,
                     LangCmd,
                     XpCmd,
-                    TFTCmd]
+                    TFTCmd,
+                    ForceSaveCmd]
 
         found_valid_command = False
         for cmd in commands:

@@ -16,5 +16,8 @@
     "CMD_AFK": "C'est noté #USER# ! Tu seras de nouveau mentionné AFK!",
     "CMD_STOPAFK": "C'est noté #USER# ! Tu ne seras plus mentionné AFK!",
     "CMD_ACCEPT_TOGGLE": "Utilisation de la commande `{1}accept`: {0}",
-    "CMD_ACCEPT_GROUP_SET": "Le groupe {0} sera maintenant attribué après l'utilisation de la commande `{1}accept`"
+    "CMD_ACCEPT_GROUP_SET": "Le groupe {0} sera maintenant attribué après l'utilisation de la commande `{1}accept`",
+    "CMD_XP_SELF": "{0} possède: `{1}`xp",
+    "CMD_XP_OTHER": "{0} possède: `{1}`xp",
+    "CMD_XP_GIVE": "{0} vient de recevoir `{1}`xp de {2} (total xp: `{3}`)"
 }
