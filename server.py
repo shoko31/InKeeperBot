@@ -58,14 +58,18 @@ class Server:
     async def user_voice_moved(self, userid, before, after):
         user = self.members[userid]
         if after.id == self.afk_channel_id:
-            self.members[userid].last_active_xp = None
-            self.members[userid].active_since = None
+            user.lock.acquire()
+            user.last_active_xp = None
+            user.active_since = None
+            user.lock.release()
             await self.print_admin_log(f'{User.get_at_mention(user.id)} ({ user.id }) moved from :sound:**{before.name}** and is now :zzz:**AFK**')
             if user.afk_mentions is True:
                 await self.get_bot_text_channel().send(Lang.get('USER_IS_AFK', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(user.id)))
         elif before.id == self.afk_channel_id:
-            self.members[userid].last_active_xp = None
-            self.members[userid].active_since = datetime.datetime.now()
+            user.lock.acquire()
+            user.last_active_xp = None
+            user.active_since = datetime.datetime.now()
+            user.lock.release()
             await self.print_admin_log(f'{User.get_at_mention(user.id)} ({user.id}) moved to :loud_sound:**{after.name}** and is no longer ~~**afk**~~')
             if user.afk_mentions is True:
                 await self.get_bot_text_channel().send(Lang.get('USER_NO_MORE_AFK', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(user.id)))
@@ -77,11 +81,13 @@ class Server:
             f'{User.get_at_mention(userid)} ({userid}) connected to :loud_sound:**{channel.name}**')
         if userid in self.members.keys():
             member = self.members[userid]
+            member.lock.acquire()
             member.last_login = datetime.datetime.now()
             member.active_since = datetime.datetime.now()
             member.last_active_xp = None
             if member.check_daily_reward() is True:
                 await self.get_bot_text_channel().send(Lang.get('DAILY_XP_REWARD_LOGIN', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(userid)).format(cfg.get_value('DAILY_REWARD_XP')))
+            member.lock.release()
             if self.members[userid].muted is True:
                 await self.guild.get_member(userid).edit(mute=True)
             else:
@@ -93,8 +99,11 @@ class Server:
 
     async def user_voice_disconnected(self, userid, channel):
         if userid in self.members.keys():
-            self.members[userid].active_since = None
-            self.members[userid].last_active_xp = None
+            user = self.members[userid]
+            user.lock.acquire()
+            user.active_since = None
+            user.last_active_xp = None
+            user.lock.release()
         await self.print_admin_log(
             f'{User.get_at_mention(userid)} ({userid}) disconnected from :sound:**{channel.name}**')
 

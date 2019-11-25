@@ -121,7 +121,7 @@ def bot_launch():
 if __name__ == '__main__':
 
     print("starting in 30seconds...")
-    time.sleep(30)
+    sleep(30)
     print("starting now")
 
     signal.signal(signal.SIGTERM, catch_sigterm)
