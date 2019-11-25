@@ -2,13 +2,14 @@
 
 from cmds.cmd import ServerCmd
 from user import User
+from lang.lang import Lang
 from perks import Perks
 
 
 async def cmd_set_perm(server, userid, channel, message):
     perks = str(message.content).split()[len(message.role_mentions) + 1:]
     if not Perks.is_valid([perk[1:] if perk.startswith(('+', '-')) else perk for perk in perks]):
-        await channel.send("La ou les permissions sont incorrectes")
+        await channel.send(Lang.get('INVALID_PERK', server.lang))
         return False
     else:
         for role in message.role_mentions:
@@ -18,7 +19,7 @@ async def cmd_set_perm(server, userid, channel, message):
                 old_perks = [perk for perk in server.group_perks[str(role.id)] if perk not in add_perks and perk not in remove_perks]
                 add_perks = old_perks + add_perks
             server.group_perks[str(role.id)] = add_perks
-        await channel.send(f"Permissions updated for {' '.join([r.mention for r in message.role_mentions])}")
+        await channel.send(Lang.get('CMD_PERM_UPDATE', server.lang).format(' '.join([r.mention for r in message.role_mentions])))
         return True
 
 
@@ -37,8 +38,7 @@ async def cmd_get_perms(server, userid, channel, message):
 
 async def cmd_perm(server, userid, channel, message):
     if len(message.role_mentions) < 1:
-        await channel.send(f"La syntaxe est incorrecte !")
-        await channel.send(f"`{server.cmd_prefix}perm <roles> <permissions>`")
+        await channel.send(f"{Lang.get('CMD_WRONG_SYNTAX', server.lang)}\r\n`{server.cmd_prefix}perm <roles> <permissions>`")
         return False
     else:
         if len(str(message.content).split()[len(message.role_mentions) + 1:]) < 1:

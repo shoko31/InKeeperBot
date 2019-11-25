@@ -58,11 +58,13 @@ class Server:
     async def user_voice_moved(self, userid, before, after):
         user = self.members[userid]
         if after.id == self.afk_channel_id:
+            self.members[userid].last_active_xp = None
             self.members[userid].active_since = None
             await self.print_admin_log(f'{User.get_at_mention(user.id)} ({ user.id }) moved from :sound:**{before.name}** and is now :zzz:**AFK**')
             if user.afk_mentions is True:
                 await self.get_bot_text_channel().send(Lang.get('USER_IS_AFK', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(user.id)))
         elif before.id == self.afk_channel_id:
+            self.members[userid].last_active_xp = None
             self.members[userid].active_since = datetime.datetime.now()
             await self.print_admin_log(f'{User.get_at_mention(user.id)} ({user.id}) moved to :loud_sound:**{after.name}** and is no longer ~~**afk**~~')
             if user.afk_mentions is True:
@@ -77,8 +79,9 @@ class Server:
             member = self.members[userid]
             member.last_login = datetime.datetime.now()
             member.active_since = datetime.datetime.now()
+            member.last_active_xp = None
             if member.check_daily_reward() is True:
-                await self.get_bot_text_channel().send(Lang.get('DAILY_XP_REWARD', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(userid)).format(cfg.get_value('DAILY_REWARD_XP')))
+                await self.get_bot_text_channel().send(Lang.get('DAILY_XP_REWARD_LOGIN', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(userid)).format(cfg.get_value('DAILY_REWARD_XP')))
             if self.members[userid].muted is True:
                 await self.guild.get_member(userid).edit(mute=True)
             else:
@@ -91,6 +94,7 @@ class Server:
     async def user_voice_disconnected(self, userid, channel):
         if userid in self.members.keys():
             self.members[userid].active_since = None
+            self.members[userid].last_active_xp = None
         await self.print_admin_log(
             f'{User.get_at_mention(userid)} ({userid}) disconnected from :sound:**{channel.name}**')
 
@@ -159,36 +163,26 @@ class Server:
         }
         json_to_save = json.dumps(to_save, default=myconverter)
         db.update_server(server.id, json_to_save)
-        ##if not os.path.exists('./saves/'):
-        ##    os.makedirs('./saves/')
-        ##with open('./saves/' + str(server.id) + '.save', 'w') as fp:
-        ##    fp.write(json_to_save)
 
     @staticmethod
     def load(server):
-        try:
-            #fp = open('./saves/' + str(server.id) + '.save', 'r')
-            #file = fp.read()
-            #fp.close()
-            loaded_server = db.get_server(server.id)
-            if loaded_server is None:
-                return False
-            if loaded_server['id'] != server.id:
-                raise Exception(f"Can't load server {server.id} : IDs don't match !")
-            server.lang = load_json_data(loaded_server, 'lang', cfg.get_value('SRV_DEFAULT_LANG'))
-            server.bot_text_channel_name = load_json_data(loaded_server, 'bot_text_channel_name', cfg.get_value('SRV_DEFAULT_BOT_TEXT_CHANNEL_NAME'))
-            server.log_text_channel_name = load_json_data(loaded_server, 'log_text_channel_name', cfg.get_value('SRV_DEFAULT_LOGS_TEXT_CHANNEL_NAME'))
-            server.cmd_prefix = load_json_data(loaded_server, 'cmd_prefix', cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME'))
-            server.admin_logs = load_json_data(loaded_server, 'admin_logs', bool(cfg.get_value('SRV_DEFAULT_DISPLAY_ADMIN_LOGS')))
-            server.group_perks = load_json_data(loaded_server, 'group_perks', {})
-            server.use_accept_command = load_json_data(loaded_server, 'use_accept', bool(cfg.get_value('SRV_DEFAULT_USE_ACCEPT_COMMAND')))
-            server.use_accept_command = load_json_data(loaded_server, 'accept_rank', cfg.get_value('SRV_DEFAULT_ACCEPT_RANK'))
-            for key, member in server.members.items():
-                for json_member in load_json_data(loaded_server, 'members', []):
-                    if load_json_data(json_member, 'id', -1) == member.id:
-                        User.from_json(json_member, member)
-                        break
-            return True
-        except FileNotFoundError:
+        loaded_server = db.get_server(server.id)
+        if loaded_server is None:
             print(f'no save found for {server.id}')
             return False
+        if loaded_server['id'] != server.id:
+            raise Exception(f"Can't load server {server.id} : IDs don't match !")
+        server.lang = load_json_data(loaded_server, 'lang', cfg.get_value('SRV_DEFAULT_LANG'))
+        server.bot_text_channel_name = load_json_data(loaded_server, 'bot_text_channel_name', cfg.get_value('SRV_DEFAULT_BOT_TEXT_CHANNEL_NAME'))
+        server.log_text_channel_name = load_json_data(loaded_server, 'log_text_channel_name', cfg.get_value('SRV_DEFAULT_LOGS_TEXT_CHANNEL_NAME'))
+        server.cmd_prefix = load_json_data(loaded_server, 'cmd_prefix', cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME'))
+        server.admin_logs = load_json_data(loaded_server, 'admin_logs', bool(cfg.get_value('SRV_DEFAULT_DISPLAY_ADMIN_LOGS')))
+        server.group_perks = load_json_data(loaded_server, 'group_perks', {})
+        server.use_accept_command = load_json_data(loaded_server, 'use_accept', bool(cfg.get_value('SRV_DEFAULT_USE_ACCEPT_COMMAND')))
+        server.use_accept_command = load_json_data(loaded_server, 'accept_rank', cfg.get_value('SRV_DEFAULT_ACCEPT_RANK'))
+        for key, member in server.members.items():
+            for json_member in load_json_data(loaded_server, 'members', []):
+                if load_json_data(json_member, 'id', -1) == member.id:
+                    User.from_json(json_member, member)
+                    break
+        return True

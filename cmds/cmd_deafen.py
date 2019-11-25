@@ -24,12 +24,10 @@ async def cmd_deafen(server, userid, channel, message):
             await mention.edit(deafen=True)
         if time > 0:
             server.members[mention.id].deaf_until = datetime.now() + timedelta(seconds=time)
-            await channel.send(
-                f"{User.get_at_mention(mention.id)} has been deafen by {User.get_at_mention(userid)} for {time} seconds")
+            await channel.send(Lang.get('CMD_DEAFEN_TIME', server.lang).format(User.get_at_mention(mention.id), User.get_at_mention(userid), time))
         else:
             server.members[mention.id].deaf_until = None
-            await channel.send(
-                f"{User.get_at_mention(mention.id)} has been deafen by {User.get_at_mention(userid)}")
+            await channel.send(Lang.get('CMD_DEAFEN', server.lang).format(User.get_at_mention(mention.id), User.get_at_mention(userid)))
         server.members[mention.id].lock.release()
     return True
 

@@ -5,11 +5,13 @@
     "USER_IS_AFK": "#USER# is having a small beer :beer: !",
     "USER_NO_MORE_AFK": "#USER# So ? How was that beer :beer: ?",
 
-    "DAILY_XP_REWARD": "#USER# just logged in and received his daily reward : {0}xp",
+    "DAILY_XP_REWARD_LOGIN": "#USER# just logged in and received his daily reward : `{0}`xp",
+    "DAILY_XP_REWARD_ACTIVE": "#USER# is active on the server and just received his daily reward : `{0}`xp",
 
     "MISSING_PERM": ":octagonal_sign: Sorry #USER#, but you don't have the right permissions to use this command !",
     "CMD_WRONG_SYNTAX": "Invalid syntax !",
     "UNKNOWN_CMD": "`{0}` is not a valid command. (try using `{1}help`)",
+    "INVALID_PERK": "Invalid permission(s)",
 
     "CMD_LANG_SET": "Language set to `{0}`",
     "CMD_LANG_GET": "Current language is `{0}`.",
@@ -19,5 +21,10 @@
     "CMD_ACCEPT_GROUP_SET": "Group {0} will now be granted after using the `{1}accept` command",
     "CMD_XP_SELF": "{0}'s xp: `{1}`",
     "CMD_XP_OTHER": "{0}'s xp: `{1}`",
-    "CMD_XP_GIVE": "{0} just received `{1}`xp from {2} (total xp: `{3}`)"
+    "CMD_XP_GIVE": "{0} just received `{1}`xp from {2} (total xp: `{3}`)",
+    "CMD_DEAFEN": "{0} has been deafen by {1}",
+    "CMD_DEAFEN_TIME": "{0} has been deafen by {1} for {2} seconds",
+    "CMD_MUTE": "{0} has been muted by {1}",
+    "CMD_MUTE_TIME": "{0} has been muted by {1} for {2} seconds",
+    "CMD_PERM_UPDATE": "Permissions updated for {0}"
 }

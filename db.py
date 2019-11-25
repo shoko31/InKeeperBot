@@ -30,7 +30,7 @@ class DB:
             self.conn.close()
             self.conn = None
 
-    def __create_server_table(self):
+    def __create_server_table(self, disconnect=True):
         if self.conn is None:
             self.connect()
         cur = self.conn.cursor()
@@ -39,6 +39,8 @@ class DB:
         VALUE           JSON    NOT NULL);''')
         self.conn.commit()
         print('SERVER TABLE CREATED')
+        if disconnect:
+            self.disconnect()
 
     def update_server(self, id, value):
         if self.conn is None:
@@ -51,6 +53,7 @@ class DB:
          SET value = EXCLUDED.value;
         '''.format(id, value))
         self.conn.commit()
+        self.disconnect()
 
     def get_server(self, id):
         if self.conn is None:
@@ -61,10 +64,11 @@ class DB:
         except psycopg2.errors.UndefinedTable:
             print('NO TABLE')
             self.conn.reset()
-            self.__create_server_table()
+            self.__create_server_table(False)
             cur = self.conn.cursor()
             cur.execute(f'SELECT * FROM SERVER WHERE id = {str(id)}')
         rows = cur.fetchall()
+        self.disconnect()
         if len(rows) < 1:
             return None
         return rows[0][1]

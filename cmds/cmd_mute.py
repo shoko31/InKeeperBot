@@ -10,8 +10,7 @@ from user import User
 async def cmd_mute(server, userid, channel, message):
     split_content = str(message.content).split()
     if len(message.mentions) < 1:
-        await channel.send(Lang.get('CMD_WRONG_SYNTAX', server.lang))
-        await channel.send(f"`{server.cmd_prefix}mute <users> (<time>)`")
+        await channel.send(f"{Lang.get('CMD_WRONG_SYNTAX', server.lang)}\r\n`{server.cmd_prefix}mute <users> (<time>)`")
         return False
     time = -1
     if len(split_content) > len(message.mentions) + 1:
@@ -26,12 +25,10 @@ async def cmd_mute(server, userid, channel, message):
             await mention.edit(mute=True)
         if time > 0:
             server.members[mention.id].muted_until = datetime.now() + timedelta(seconds=time)
-            await channel.send(
-                f"{User.get_at_mention(mention.id)} has been muted by {User.get_at_mention(userid)} for {time} seconds")
+            await channel.send(Lang.get('CMD_MUTE_TIME', server.lang).format(User.get_at_mention(mention.id), User.get_at_mention(userid), time))
         else:
             server.members[mention.id].muted_until = None
-            await channel.send(
-                f"{User.get_at_mention(mention.id)} has been muted by {User.get_at_mention(userid)}")
+            await channel.send(Lang.get('CMD_MUTE', server.lang).format(User.get_at_mention(mention.id), User.get_at_mention(userid)))
         server.members[mention.id].lock.release()
     return True
 

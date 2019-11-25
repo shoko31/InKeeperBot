@@ -5,11 +5,13 @@
     "USER_IS_AFK": "#USER# est parti boire une p'tite bière :beer: !",
     "USER_NO_MORE_AFK": "#USER# Alors ? Elle était bonne cette :beer: ?",
 
-    "DAILY_XP_REWARD": "#USER# vient de se connecter et récupérer sa récompense journalière : {0}xp",
+    "DAILY_XP_REWARD_LOGIN": "#USER# vient de se connecter et récupérer sa récompense journalière : `{0}`xp",
+    "DAILY_XP_REWARD_ACTIVE": "#USER# est actif sur le serveur et vient de recevoir sa récompense journalière : `{0}`xp",
 
     "MISSING_PERM": ":octagonal_sign: Désolé #USER#, mais tu n'as pas les permissions requises pour executer cette commande !",
     "CMD_WRONG_SYNTAX": "La syntaxe est incorrecte !",
     "UNKNOWN_CMD": "La commande `{0}` n'est pas valide. (essaie `{1}help`)",
+    "INVALID_PERK": "La ou les permissions sont incorrectes",
 
     "CMD_LANG_SET": "La langue est maintenant `{0}`.",
     "CMD_LANG_GET": "La langue actuelle est `{0}`.",
@@ -19,5 +21,10 @@
     "CMD_ACCEPT_GROUP_SET": "Le groupe {0} sera maintenant attribué après l'utilisation de la commande `{1}accept`",
     "CMD_XP_SELF": "{0} possède: `{1}`xp",
     "CMD_XP_OTHER": "{0} possède: `{1}`xp",
-    "CMD_XP_GIVE": "{0} vient de recevoir `{1}`xp de {2} (total xp: `{3}`)"
+    "CMD_XP_GIVE": "{0} vient de recevoir `{1}`xp de {2} (total xp: `{3}`)",
+    "CMD_DEAFEN": "{0} a été rendu sourd par {1}",
+    "CMD_DEAFEN_TIME": "{0} a été rendu sourd par {1} pour {2} secondes",
+    "CMD_MUTE": "{0} a été rendu mué par {1}",
+    "CMD_MUTE_TIME": "{0} a été rendu mué par {1} pour {2} secondes",
+    "CMD_PERM_UPDATE": "Permissions mises à jour pour {0}"
 }

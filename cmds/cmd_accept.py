@@ -29,8 +29,7 @@ async def cmd_toggle_accept(server, userid, channel, message):
 
 async def cmd_accept_group_set(server, userid, channel, message):
     if len(message.role_mentions) < 1:
-        await channel.send(Lang.get('CMD_WRONG_SYNTAX', server.lang))
-        await channel.send(f'`{server.cmd_prefix}acceptgroup <group>`')
+        await channel.send(f"{Lang.get('CMD_WRONG_SYNTAX', server.lang)}\r\n`{server.cmd_prefix}acceptgroup <group>`")
         return False
     server.accept_rank = message.role_mentions[0].name
     await channel.send(Lang.get('CMD_ACCEPT_GROUP_SET', server.lang).format(message.role_mentions[0].mention, server.cmd_prefix))

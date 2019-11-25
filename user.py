@@ -66,6 +66,7 @@ class User:
             'xp': user.xp,
             'last_login': user.last_login,
             'last_daily_reward': user.last_daily_reward,
+            'last_active_xp': user.last_active_xp,
             'muted': user.muted,
             'muted_until': user.muted_until,
             'deaf': user.deaf,
@@ -82,6 +83,8 @@ class User:
         user.xp = load_json_data(json_object, 'xp', 0)
         user.last_login = load_json_data(json_object, 'last_login', None)
         user.last_daily_reward = load_json_data(json_object, 'last_daily_reward', None)
+        if user.active_since is not None:
+            user.last_active_xp = load_json_data(json_object, 'last_active_xp', None)
         user.muted = bool(load_json_data(json_object, 'muted', False))
         user.muted_until = load_json_data(json_object, 'muted_until', None)
         user.deaf = bool(load_json_data(json_object, 'deaf', False))
@@ -90,6 +93,8 @@ class User:
             user.last_login = datetime.datetime.strptime(user.last_login, '%a %b %d %H:%M:%S %Y')
         if user.last_daily_reward is not None:
             user.last_daily_reward = datetime.datetime.strptime(user.last_daily_reward, '%a %b %d %H:%M:%S %Y')
+        if user.last_active_xp is not None:
+            user.last_active_xp = datetime.datetime.strptime(user.last_active_xp, '%a %b %d %H:%M:%S %Y')
         if user.muted_until is not None:
             user.muted_until = datetime.datetime.strptime(user.muted_until, '%a %b %d %H:%M:%S %Y')
         if user.deaf_until is not None:
