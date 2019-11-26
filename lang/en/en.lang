@@ -1,12 +1,16 @@
 {
     "YES": "Yes",
     "NO": "No",
+    "HOURS": "hours",
+    "MINUTES": "minutes",
+    "SECONDS": "seconds",
 
     "USER_IS_AFK": "#USER# is having a small beer :beer: !",
     "USER_NO_MORE_AFK": "#USER# So ? How was that beer :beer: ?",
 
     "DAILY_XP_REWARD_LOGIN": "#USER# just logged in and received his daily reward : `{0}`xp",
     "DAILY_XP_REWARD_ACTIVE": "#USER# is active on the server and just received his daily reward : `{0}`xp",
+    "NEXT_DAILY_XP_REWARD": "Next daily reward for {0} is in `{1}`",
 
     "MISSING_PERM": ":octagonal_sign: Sorry #USER#, but you don't have the right permissions to use this command !",
     "CMD_WRONG_SYNTAX": "Invalid syntax !",

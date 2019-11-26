@@ -27,7 +27,7 @@ from cmds.cmd_lang import LangCmd
 from cmds.cmd_xp import XpCmd
 from cmds.cmd_tft import TFTCmd
 from cmds.cmd_force_save import ForceSaveCmd
-from cmds.cmd_daily_reward import DailyRewardCmd
+from cmds.cmd_daily_reward import DailyRewardCmd, DailyRewardAliasCmd
 
 
 class Server:
@@ -140,7 +140,7 @@ class Server:
                     XpCmd,
                     TFTCmd,
                     ForceSaveCmd,
-                    DailyRewardCmd]
+                    DailyRewardCmd, DailyRewardAliasCmd]
 
         found_valid_command = False
         for cmd in commands:
