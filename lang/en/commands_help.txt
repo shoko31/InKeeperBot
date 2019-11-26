@@ -6,6 +6,7 @@
 - **#CMDPREFIX#stopafk** : disables fun mentions when you're going afk
 - **#CMDPREFIX#warns** : displays received warnings
 - **#CMDPREFIX#xp** : displays your current experience points
+- **#CMDPREFIX#daily** or **#CMDPREFIX#dailyreward** : display the remaining time before your next daily reward
 
 - **#CMDPREFIX#prefix** : displays the command prefix (by default: `!!`)
 - **#CMDPREFIX#prefix <prefix>** : changes the command prefix (by default: `!!`)
@@ -15,8 +16,10 @@
 - **#CMDPREFIX#unmute <users>** : cancels speaking prevention for specified users
 - **#CMDPREFIX#deafen <users> (<time>)** : prevents specified users from listening (for X secondes)
 - **#CMDPREFIX#undeafen <users>** : cancels listening prevention for specified users
+- **#CMDPREFIX#xp <users>** : displays specified users current experience points
 
 - **#CMDPREFIX#lang <lang_key>** : changes the bot language on the server
 - **#CMDPREFIX#toggleaccept** : enables/disables usage of `#CMDPREFIX#accept` command
 - **#CMDPREFIX#acceptgroup <group>** : set the server group for the `#CMDPREFIX#accept` command
 - **#CMDPREFIX#perm <groups> <perms>** : adds/deletes permissions to specified server groups
+- **#CMDPREFIX#xp <users> <amount>** : Give specified users experience points

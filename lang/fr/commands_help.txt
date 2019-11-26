@@ -1,22 +1,25 @@
 - **#CMDPREFIX#help** : affiche ce message
 - **#CMDPREFIX#commands** : affiche ce message
-- **#CMDPREFIX#version** : Affiche la version du bot
+- **#CMDPREFIX#version** : affiche la version du bot
 
 - **#CMDPREFIX#afk** : active les mentions funs lorsque tu es AFK sur un serveur
 - **#CMDPREFIX#stopafk** : désactive les mentions funs lorsque tu es AFK sur un serveur
 - **#CMDPREFIX#warns** : affiche les avertissements que tu as reçu
 - **#CMDPREFIX#xp** : affiche tes points d'expérience
+- **#CMDPREFIX#daily** ou **#CMDPREFIX#dailyreward** : affiche le temps restant avant ta prochaine récompense journalière
 
 - **#CMDPREFIX#prefix** : affiche le prefix utilisé pour les commandes (par défaut: `!!`)
 - **#CMDPREFIX#prefix <prefix>** : change le prefix utilisé pour les commandes (par défaut: `!!`)
 - **#CMDPREFIX#warns <users>** : affiche les avertissements reçus
 - **#CMDPREFIX#warn <users> <reason>** : donne un avertissement aux utilisateurs mentionnés
-- **#CMDPREFIX#mute <users> (<time>)** : empêche les utilisateurs de parler (pendant X secondes)
-- **#CMDPREFIX#unmute <users>** : suspend la restriction de parole
-- **#CMDPREFIX#deafen <users> (<time>)** : empêche les utilisateurs d'entendre (pendant X secondes)
-- **#CMDPREFIX#undeafen <users>** : suspend la restriction d'écoute
+- **#CMDPREFIX#mute <users> (<time>)** : empêche les utilisateurs mentionnés de parler (pendant X secondes)
+- **#CMDPREFIX#unmute <users>** : suspend la restriction de parole des utilisateurs mentionnés
+- **#CMDPREFIX#deafen <users> (<time>)** : empêche les utilisateurs mentionnés d'entendre (pendant X secondes)
+- **#CMDPREFIX#undeafen <users>** : suspend la restriction d'écoute des utilisateurs mentionnés
+- **#CMDPREFIX#xp <users>** : affiche les points d'expérience des utilisateurs mentionnés
 
 - **#CMDPREFIX#lang <lang_key>** : change la langue du bot sur le serveur
 - **#CMDPREFIX#toggleaccept** : active/désactive l'utilisation de la commande `#CMDPREFIX#accept`
 - **#CMDPREFIX#acceptgroup <group>** : définie le groupe pour la commande `#CMDPREFIX#accept`
 - **#CMDPREFIX#perm <groups> <perms>** : ajoute/supprime les permissions aux groupes
+- **#CMDPREFIX#xp <users> <amount>** : donne des points d'expérience aux utilisateurs mentionnés
