@@ -9,8 +9,8 @@ async def cmd_daily_reward(server, userid, channel, message):
     if userid in server.members.keys():
         member = server.members[userid]
         now = datetime.now()
-        daily_time = (now - member.last_daily_reward).total_seconds()
-        seconds = daily_time % 60
+        daily_time = 86400 - (now - member.last_daily_reward).total_seconds()
+        seconds = floor(daily_time % 60)
         minutes = floor(daily_time / 60)
         hours = floor(minutes / 60)
         minutes = minutes % 60
