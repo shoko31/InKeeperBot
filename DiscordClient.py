@@ -88,17 +88,17 @@ class DiscordClient(discord.Client):
             user = find(lambda m: m.name == str(member).split('#')[0], self.users)
             await server.user_voice_state_updated(user.id, before_channel)
 
-    async def on_guild_join(self, guild):
-        print(f'JOINED {guild.name}')
-
-    async def on_guild_remove(guild):
-        print(f'LEFT {guild.name}')
-
     async def on_member_join(self, member):
         print(f'Member joined: {member}')
 
     async def on_member_remove(self, member):
         print(f'Member left: {member}')
+
+    async def on_guild_join(self, guild):
+        print(f'JOINED {guild.name}')
+
+    async def on_guild_remove(self, guild):
+        print(f'LEFT {guild.name}')
 
     async def on_guild_update(self, before, after):
         guild = self.servers.get(after.id)
