@@ -18,22 +18,23 @@ class PerksClass:
             'cmd.lang', 'cmd.lang.display', 'cmd.lang.change',
             'cmd.xp', 'cmd.xp.give', 'cmd.xp.display', 'cmd.xp.display.other', 'cmd.xp.display.self',
             'cmd.tft',
-            'cmd.forcesave'
+            'cmd.forcesave',
+            'cmd.daily_reward'
         ]
 
         self.groups = {
             'group.admin': [
                 'cmd.version', 'cmd.accept.toggle', 'cmd.accept.set', 'cmd.afk', 'cmd.stopafk', 'cmd.help', 'cmd.commands', 'cmd.perm',
                 'cmd.prefix', 'cmd.warn', 'cmd.warns', 'cmd.mute', 'cmd.unmute', 'cmd.deafen', 'cmd.undeafen', 'cmd.lang', 'cmd.xp',
-                'cmd.tft', 'cmd.forcesave'
+                'cmd.tft', 'cmd.forcesave', 'cmd.daily_reward'
             ],
             'group.moderator': [
                 'cmd.afk', 'cmd.stopafk', 'cmd.help', 'cmd.commands', 'cmd.prefix.display', 'cmd.warn', 'cmd.warns',
-                'cmd.mute', 'cmd.unmute', 'cmd.deafen', 'cmd.undeafen', 'cmd.lang.display', 'cmd.xp.display'
+                'cmd.mute', 'cmd.unmute', 'cmd.deafen', 'cmd.undeafen', 'cmd.lang.display', 'cmd.xp.display', 'cmd.daily_reward'
             ],
             'group.user': [
                 'cmd.afk', 'cmd.stopafk', 'cmd.help', 'cmd.commands', 'cmd.prefix.display',
-                'cmd.warns.self', 'cmd.xp.display.self'
+                'cmd.warns.self', 'cmd.xp.display.self', 'cmd.daily_reward'
             ],
             'group.guest': ['cmd.help', 'cmd.commands']
         }

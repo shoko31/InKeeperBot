@@ -53,9 +53,8 @@ def grant_connected_user_xp(server, member, current_time):
         differ_time = member.last_active_xp
         if member.last_active_xp is None:
             differ_time = member.active_since
-        diff_since_last_xp = math.floor((current_time - differ_time).total_seconds() / 3600)
+        diff_since_last_xp = math.floor((current_time - differ_time).total_seconds() / 3600.0)
         if diff_since_last_xp >= 1:
-            print(current_time, differ_time, str(diff_since_last_xp))
             member.lock.acquire()
             member.xp = member.xp + (diff_since_last_xp * cfg.get_value('HOUR_ACTIVITY_REWARD_XP'))
             differ_time = differ_time + timedelta(hours=diff_since_last_xp)
