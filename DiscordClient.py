@@ -88,6 +88,31 @@ class DiscordClient(discord.Client):
             user = find(lambda m: m.name == str(member).split('#')[0], self.users)
             await server.user_voice_state_updated(user.id, before_channel)
 
+    async def on_guild_join(self, guild):
+        print(f'JOINED {guild.name}')
+
+    async def on_guild_remove(guild):
+        print(f'LEFT {guild.name}')
+
+    async def on_member_join(self, member):
+        print(f'Member joined: {member}')
+
+    async def on_member_remove(self, member):
+        print(f'Member left: {member}')
+
+    async def on_guild_update(self, before, after):
+        guild = self.servers.get(after.id)
+        if guild is None:
+            raise Exception(f"Could'nt find guild on guild update ({after.id})")
+        else:
+            guild.guild = after
+            # Check afk channel change
+            if after.afk_channel.id != guild.afk_channel_id:
+                guild.afk_channel_id = after.afk_channel.id
+            # Check name change
+            if guild.name != after.name:
+                guild.name = after.name
+
     async def on_disconnect(self):
         print('DISCONNECTING')
         for key, server in self.servers.items():
