@@ -95,10 +95,19 @@ class DiscordClient(discord.Client):
         print(f'Member left: {member}')
 
     async def on_guild_join(self, guild):
-        print(f'JOINED {guild.name}')
+        print(f'{self.user} has joined a new Discord: {guild.name}(id: {guild.id})')
+        self.servers[guild.id] = Server(guild)
+        if Server.load(self.servers[guild.id]) is False:
+            Server.save(self.servers[guild.id])
 
     async def on_guild_remove(self, guild):
-        print(f'LEFT {guild.name}')
+        print(f'{self.user} has left a Discord: {guild.name}(id: {guild.id})')
+        server = self.servers.get(guild.id)
+        if server is None:
+            raise Exception(f"Could'nt find guild on guild update ({guild.id})")
+        else:
+            Server.save(server)
+            del self.servers[guild.id]
 
     async def on_guild_update(self, before, after):
         guild = self.servers.get(after.id)
@@ -107,7 +116,9 @@ class DiscordClient(discord.Client):
         else:
             guild.guild = after
             # Check afk channel change
-            if after.afk_channel.id != guild.afk_channel_id:
+            if after.afk_channel is None:
+                guild.afk_channel_id = -1
+            elif after.afk_channel.id != guild.afk_channel_id:
                 guild.afk_channel_id = after.afk_channel.id
             # Check name change
             if guild.name != after.name:

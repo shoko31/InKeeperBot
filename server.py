@@ -38,7 +38,7 @@ class Server:
         self.id = guild.id
         self.name = guild.name
         self.lang = cfg.get_value('SRV_DEFAULT_LANG')
-        self.afk_channel_id = guild.afk_channel.id
+        self.afk_channel_id = guild.afk_channel.id if guild.afk_channel is not None else -1
         self.bot_text_channel_name = cfg.get_value('SRV_DEFAULT_BOT_TEXT_CHANNEL_NAME')
         self.log_text_channel_name = cfg.get_value('SRV_DEFAULT_LOGS_TEXT_CHANNEL_NAME')
         self.cmd_prefix = cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME')
