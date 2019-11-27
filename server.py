@@ -121,7 +121,7 @@ class Server:
     async def print_bot_message(self, msg):
         bot_channel = self.get_bot_text_channel()
         if bot_channel is not None:
-            await log_channel.send(msg)
+            await bot_channel.send(msg)
 
     async def print_admin_log(self, msg):
         if self.admin_logs is True:
