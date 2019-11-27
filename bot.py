@@ -66,7 +66,7 @@ def grant_connected_user_daily_reward(server, member):
     global bot_loop
     member.lock.acquire()
     if member.active_since is not None and member.check_daily_reward() is True:
-        asyncio.run_coroutine_threadsafe(server.get_bot_text_channel().send(Lang.get('DAILY_XP_REWARD_ACTIVE', server.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(member.id)).format(cfg.get_value('DAILY_REWARD_XP'))), bot_loop)
+        asyncio.run_coroutine_threadsafe(server.print_bot_message(Lang.get('DAILY_XP_REWARD_ACTIVE', server.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(member.id)).format(cfg.get_value('DAILY_REWARD_XP'))), bot_loop)
     member.lock.release()
 
 

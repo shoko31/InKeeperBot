@@ -65,7 +65,7 @@ class Server:
             user.lock.release()
             await self.print_admin_log(f'{User.get_at_mention(user.id)} ({ user.id }) moved from :sound:**{before.name}** and is now :zzz:**AFK**')
             if user.afk_mentions is True:
-                await self.get_bot_text_channel().send(Lang.get('USER_IS_AFK', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(user.id)))
+                await self.print_bot_message(Lang.get('USER_IS_AFK', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(user.id)))
         elif before.id == self.afk_channel_id:
             user.lock.acquire()
             user.last_active_xp = None
@@ -73,7 +73,7 @@ class Server:
             user.lock.release()
             await self.print_admin_log(f'{User.get_at_mention(user.id)} ({user.id}) moved to :loud_sound:**{after.name}** and is no longer ~~**afk**~~')
             if user.afk_mentions is True:
-                await self.get_bot_text_channel().send(Lang.get('USER_NO_MORE_AFK', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(user.id)))
+                await self.print_bot_message(Lang.get('USER_NO_MORE_AFK', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(user.id)))
         else:
             await self.print_admin_log(f"{User.get_at_mention(user.id)} ({user.id}) moved from :sound:**{before.name}** to :loud_sound:**{after.name}**")
 
@@ -87,7 +87,7 @@ class Server:
             member.active_since = datetime.datetime.now()
             member.last_active_xp = None
             if member.check_daily_reward() is True:
-                await self.get_bot_text_channel().send(Lang.get('DAILY_XP_REWARD_LOGIN', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(userid)).format(cfg.get_value('DAILY_REWARD_XP')))
+                await self.print_bot_message(Lang.get('DAILY_XP_REWARD_LOGIN', self.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(userid)).format(cfg.get_value('DAILY_REWARD_XP')))
             member.lock.release()
             if self.members[userid].muted is True:
                 await self.guild.get_member(userid).edit(mute=True)
@@ -118,11 +118,17 @@ class Server:
             if voice_state.deaf is False and member.deaf is True:
                 await self.guild.get_member(userid).edit(deafen=True)
 
+    async def print_bot_message(self, msg):
+        bot_channel = self.get_bot_text_channel()
+        if bot_channel is not None:
+            await log_channel.send(msg)
+
     async def print_admin_log(self, msg):
         if self.admin_logs is True:
             log_channel = self.get_log_text_channel()
-            current_time = datetime.datetime.now()
-            await log_channel.send(f"[{current_time.day}/{current_time.month}/{current_time.year} {current_time.hour}:{current_time.minute}:{current_time.second}] {msg}")
+            if log_channel is not None:
+                current_time = datetime.datetime.now()
+                await log_channel.send(f"[{current_time.day}/{current_time.month}/{current_time.year} {current_time.hour}:{current_time.minute}:{current_time.second}] {msg}")
 
     ### COMMANDS ###
     async def cmd_router(self, msg, userid, channel):
