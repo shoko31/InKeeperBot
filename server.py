@@ -6,7 +6,7 @@ from lang.lang import Lang
 from discord.utils import find
 import json
 import os
-from utils import load_json_data, myconverter
+from utils import load_json_data, myconverter, bot_id
 import threading
 from db import db
 
@@ -47,6 +47,7 @@ class Server:
         self.group_perks = {}
         self.accept_rank = cfg.get_value('SRV_DEFAULT_ACCEPT_RANK')
         self.use_accept_command = bool(cfg.get_value('SRV_DEFAULT_USE_ACCEPT_COMMAND'))
+        self.welcome_message = cfg.get_value('SRV_DEFAULT_WELCOME_MESSAGE')
         for member in guild.members:
             self.members[member.id] = User(member)
 
@@ -117,6 +118,15 @@ class Server:
                 await self.guild.get_member(userid).edit(mute=True)
             if voice_state.deaf is False and member.deaf is True:
                 await self.guild.get_member(userid).edit(deafen=True)
+
+    async def user_joined(self, userid):
+        await self.print_bot_message(self.welcome_message
+                                     .replace('#USER#', User.get_at_mention(userid))
+                                     .replace('#SERVER#', self.name)
+                                     .replace('#BOT#', bot_id[0]))
+
+    async def user_left(self, userid):
+        pass
 
     async def print_bot_message(self, msg):
         bot_channel = self.get_bot_text_channel()

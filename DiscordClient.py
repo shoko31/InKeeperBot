@@ -17,9 +17,11 @@ class DiscordClient(discord.Client):
         self.textfile_bot_mention_tag = cfg.get_value('TEXTFILE_BOT_MENTION')
         self.dm_help_cmd = cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME') + 'help'
         self.dm_commands_cmd = cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME') + 'commands'
+        self.dm_invite_cmd = cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME') + 'invite'
         super(DiscordClient, self).__init__()
-        self.activity = discord.Activity(name=self.dm_help_cmd, details=self.dm_help_cmd, state=self.dm_help_cmd,
-                                           type=discord.ActivityType.listening)
+        activity = self.dm_help_cmd + ' and ' + self.dm_invite_cmd
+        self.activity = discord.Activity(name=activity, details=activity, state=activity,
+                                         type=discord.ActivityType.listening)
 
     async def send_dm_help(self, message):
         text = ""
@@ -31,6 +33,16 @@ class DiscordClient(discord.Client):
             text.replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(message.author.id))
                 .replace(cfg.get_value('TEXTFILE_BOT_MENTION'), User.get_at_mention(bot_id[0]))
                 .replace(cfg.get_value('TEXTFILE_CMD_PREFIX_MENTION'), cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME')))
+
+    async def send_dm_invite(self, message):
+        text = ""
+        with open('/lang/en/dm_invite.txt') as fp:
+            text += fp.read()
+        await message.channel.send(
+            text.replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(message.author.id))
+                .replace(cfg.get_value('TEXTFILE_BOT_MENTION'), User.get_at_mention(bot_id[0]))
+                .replace(cfg.get_value('TEXTFILE_CMD_PREFIX_MENTION'), cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME'))
+                .replace(cfg.get_value('TEXTFILE_INVITE_URL'), cfg.get_value('INVITE_URL')))
 
     async def on_ready(self):
         bot_id[0] = self.user.id
@@ -45,6 +57,8 @@ class DiscordClient(discord.Client):
             if type(message.channel) is discord.DMChannel or type(message.channel) is discord.GroupChannel:  # DMs
                 if str(message.content).startswith(self.dm_help_cmd) or str(message.content).startswith(self.dm_commands_cmd):
                     await self.send_dm_help(message)
+                elif str(message.content).startswith(self.dm_invite_cmd):
+                    await self.send_dm_invite(message)
             else:  # Message on a server
                 if message.guild is not None:
                     server = self.servers.get(message.guild.id)
@@ -59,7 +73,7 @@ class DiscordClient(discord.Client):
             after_channel = self.get_channel(after.channel.id)
             server = self.servers.get(after_channel.guild.id)
             if server is None:
-                raise Exception("unknown server")
+                raise Exception("unknown server (voice state update)")
             user = find(lambda m: m.name == str(member).split('#')[0], self.users)
             await server.user_voice_connected(user.id, after_channel)
 
@@ -67,7 +81,7 @@ class DiscordClient(discord.Client):
             before_channel = self.get_channel(before.channel.id)
             server = self.servers.get(before_channel.guild.id)
             if server is None:
-                raise Exception("unknown server")
+                raise Exception("unknown server (voice state update)")
             user = find(lambda m: m.name == str(member).split('#')[0], self.users)
             await server.user_voice_disconnected(user.id, before_channel)
 
@@ -76,7 +90,7 @@ class DiscordClient(discord.Client):
             after_channel = self.get_channel(after.channel.id)
             server = self.servers.get(before_channel.guild.id)
             if server is None:
-                raise Exception("unknown server")
+                raise Exception("unknown server (voice state update)")
             user = find(lambda m: m.name == str(member).split('#')[0], self.users)
             await server.user_voice_moved(user.id, before_channel, after_channel)
 
@@ -84,15 +98,23 @@ class DiscordClient(discord.Client):
             before_channel = self.get_channel(before.channel.id)
             server = self.servers.get(before_channel.guild.id)
             if server is None:
-                raise Exception("unknown server")
+                raise Exception("unknown server (voice state update)")
             user = find(lambda m: m.name == str(member).split('#')[0], self.users)
             await server.user_voice_state_updated(user.id, before_channel)
 
     async def on_member_join(self, member):
-        print(f'Member joined: {member}')
+        if member is not None and member.guild is not None:
+            server = self.servers.get(member.guild.id)
+            if server is None:
+                raise Exception("unknown server (member joined)")
+            server.user_joined(member.id)
 
     async def on_member_remove(self, member):
-        print(f'Member left: {member}')
+        if member is not None and member.guild is not None:
+            server = self.servers.get(member.guild.id)
+            if server is None:
+                raise Exception("unknown server (member left)")
+            server.user_left(member.id)
 
     async def on_guild_join(self, guild):
         print(f'{self.user} has joined a new Discord: {guild.name}(id: {guild.id})')
