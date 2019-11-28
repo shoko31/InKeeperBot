@@ -123,7 +123,7 @@ class Server:
         await self.print_bot_message(self.welcome_message
                                      .replace('#USER#', User.get_at_mention(userid))
                                      .replace('#SERVER#', self.name)
-                                     .replace('#BOT#', bot_id[0]))
+                                     .replace('#BOT#', str(bot_id[0])))
 
     async def user_left(self, userid):
         pass
