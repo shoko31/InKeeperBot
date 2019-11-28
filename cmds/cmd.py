@@ -4,6 +4,7 @@ from lang.lang import Lang
 from config import cfg
 from user import User
 from perks import Perks
+from utils import COLOR, simple_embed
 
 class ServerCmd:
 
@@ -34,8 +35,8 @@ class ServerCmd:
 
     async def run_cmd(self, server, userid, channel, message):
         if not self.can_execute(server, userid):
-            await channel.send(
-                Lang.get('MISSING_PERM', server.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(userid)))
+            await channel.send(embed=simple_embed(value=
+                Lang.get('MISSING_PERM', server.lang).replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(userid)), color=COLOR.RED))
             return False
         else:
             return await self.action(server, userid, channel, message)

@@ -105,11 +105,11 @@ def catch_sigterm(signum, frame):
     loop.call_soon_threadsafe(loop.stop)
 
 
-def bot_launch():
+def bot_launch(id=None, max=None):
     global bot_loop, bot_client
     bot_loop = asyncio.new_event_loop()
     asyncio.set_event_loop(bot_loop)
-    bot_client = DiscordClient()
+    bot_client = DiscordClient(id, max)
     print('Client login')
     bot_loop.run_until_complete(bot_client.login(token))
     print('Client connect')
@@ -120,13 +120,16 @@ def bot_launch():
 if __name__ == '__main__':
 
     print("starting in 30seconds...")
-    sleep(30)
+    #sleep(30)
     print("starting now")
 
     signal.signal(signal.SIGTERM, catch_sigterm)
 
     bot_thread = threading.Thread(target=bot_launch, daemon=True)
     bot_thread.start()
+
+    # bot_thread2 = threading.Thread(target=bot_launch2, kwargs={'id': 1, 'max': 2}, daemon=True)
+    # bot_thread2.start()
 
     background_loop_thread = threading.Thread(target=background_loop, daemon=True)
     background_loop_thread.start()

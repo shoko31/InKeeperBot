@@ -4,7 +4,7 @@ import discord
 from config import cfg
 from cmds.cmd import ServerCmd
 from user import User
-from utils import bot_id
+from utils import bot_id, COLOR, simple_embed
 
 async def cmd_help(server, userid, channel, message):
     text = ""
@@ -12,10 +12,11 @@ async def cmd_help(server, userid, channel, message):
         text += fp.read()
     with open(f'./lang/{server.lang}/commands_help.txt') as fp:
         text += fp.read()
-    await message.channel.send(
+    help_embed = simple_embed(value=
         text.replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(message.author.id))
             .replace(cfg.get_value('TEXTFILE_BOT_MENTION'), User.get_at_mention(bot_id[0]))
             .replace(cfg.get_value('TEXTFILE_CMD_PREFIX_MENTION'), server.cmd_prefix))
+    await message.channel.send(embed=help_embed)
     return True
 
 HelpCmd = ServerCmd('help', cmd_help)

@@ -10,7 +10,7 @@ from utils import bot_id
 
 class DiscordClient(discord.Client):
 
-    def __init__(self):
+    def __init__(self, shard_id=None, shard_count=None):
         load_dotenv()
         self.servers = {}
         self.textfile_user_mention_tag = cfg.get_value('TEXTFILE_USER_MENTION')
@@ -18,7 +18,7 @@ class DiscordClient(discord.Client):
         self.dm_help_cmd = cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME') + 'help'
         self.dm_commands_cmd = cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME') + 'commands'
         self.dm_invite_cmd = cfg.get_value('SRV_DEFAULT_CMD_PREFIX_NAME') + 'invite'
-        super(DiscordClient, self).__init__()
+        super(DiscordClient, self).__init__(shard_id=shard_id, shard_count=shard_count)
         activity = self.dm_help_cmd + ' and ' + self.dm_invite_cmd
         self.activity = discord.Activity(name=activity, details=activity, state=activity,
                                          type=discord.ActivityType.listening)
@@ -45,6 +45,7 @@ class DiscordClient(discord.Client):
                 .replace(cfg.get_value('TEXTFILE_INVITE_URL'), cfg.get_value('INVITE_URL')))
 
     async def on_ready(self):
+        print(f'Client is ready (shard id: {self.shard_id})')
         bot_id[0] = self.user.id
         for guild in self.guilds:
             print(f'{self.user} has connected to Discord: {guild.name}(id: {guild.id})')
@@ -64,6 +65,17 @@ class DiscordClient(discord.Client):
                     server = self.servers.get(message.guild.id)
                     if server is not None:
                         await server.cmd_router(message, message.author.id, message.channel)
+
+    async def on_reaction_add(self, reaction, user):
+        if reaction.me or user == self.user:  # Filter auto-reaction or bot reaction
+            return
+        if reaction.message is None or reaction.message.author != self.user:  # Only catch bot's messages reactions
+            return
+        if type(user) is discord.member.Member:
+            server = self.servers.get(user.guild.id)
+            if server is None:
+                raise Exception('server not found (on_reaction_add')
+            await server.bot_message_get_reaction(reaction.message, reaction, user.id)
 
     async def on_voice_state_update(self, member, before, after):
         if before.channel is None and after.channel is None:

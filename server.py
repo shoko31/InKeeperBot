@@ -3,6 +3,7 @@
 from user import *
 from config import cfg
 from lang.lang import Lang
+from discord import embeds, colour
 from discord.utils import find
 import json
 import os
@@ -48,6 +49,7 @@ class Server:
         self.accept_rank = cfg.get_value('SRV_DEFAULT_ACCEPT_RANK')
         self.use_accept_command = bool(cfg.get_value('SRV_DEFAULT_USE_ACCEPT_COMMAND'))
         self.welcome_message = cfg.get_value('SRV_DEFAULT_WELCOME_MESSAGE')
+        self.goodbye_message = cfg.get_value('SRV_DEFAULT_GOODBYE_MESSAGE')
         for member in guild.members:
             self.members[member.id] = User(member)
 
@@ -126,12 +128,19 @@ class Server:
                                      .replace('#BOT#', str(bot_id[0])))
 
     async def user_left(self, userid):
-        pass
+        await self.print_bot_message(self.goodbye_message
+                                     .replace('#USER#', User.get_at_mention(userid))
+                                     .replace('#SERVER#', self.name)
+                                     .replace('#BOT#', str(bot_id[0])))
 
-    async def print_bot_message(self, msg):
+    async def bot_message_get_reaction(self, message, reaction, userid):
+        print(type(reaction.emoji))
+        await message.channel.send(f'{User.get_at_mention(userid)} mentionned my message')
+
+    async def print_bot_message(self, msg=None, embed=None):
         bot_channel = self.get_bot_text_channel()
         if bot_channel is not None:
-            await bot_channel.send(msg)
+            await bot_channel.send(content=msg, embed=embed)
 
     async def print_admin_log(self, msg):
         if self.admin_logs is True:
