@@ -1,4 +1,4 @@
-discord.py
-python-dotenv
-requests
-psycopg2-binary
+discord.py==1.2.5
+python-dotenv==0.10.3
+requests==2.18.4
+psycopg2-binary==2.8.4
