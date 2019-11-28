@@ -36,7 +36,7 @@ class DiscordClient(discord.Client):
 
     async def send_dm_invite(self, message):
         text = ""
-        with open('/lang/en/dm_invite.txt') as fp:
+        with open('./lang/en/dm_invite.txt') as fp:
             text += fp.read()
         await message.channel.send(
             text.replace(cfg.get_value('TEXTFILE_USER_MENTION'), User.get_at_mention(message.author.id))
