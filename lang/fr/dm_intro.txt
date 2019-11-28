@@ -1,5 +1,0 @@
-Salut **#USER#** !
-Je suis **#BOT#**.
-Avec moi, tu pourras bientôt faire plein de trucs cool :thumbsup:. Mais pour le moment, je suis encore en développement :construction_worker:.
-Tu peux cependant déjà utiliser les commandes suivantes sur n'importe lequel des serveurs où je me trouve:
-

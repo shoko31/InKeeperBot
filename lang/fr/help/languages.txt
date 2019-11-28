@@ -1,0 +1,7 @@
+- **#CMDPREFIX#lang <lang_key>** : change la langue du bot sur le serveur
+
+Les clés de language disponibles sont :
+- :flag_us: **`EN`**
+- :flag_fr: **`FR`**
+
+:grey_question: **Retour au menu d'accueil de l'aide**

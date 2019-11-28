@@ -120,16 +120,13 @@ def bot_launch(id=None, max=None):
 if __name__ == '__main__':
 
     print("starting in 30seconds...")
-    #sleep(30)
+    sleep(30)
     print("starting now")
 
     signal.signal(signal.SIGTERM, catch_sigterm)
 
     bot_thread = threading.Thread(target=bot_launch, daemon=True)
     bot_thread.start()
-
-    # bot_thread2 = threading.Thread(target=bot_launch2, kwargs={'id': 1, 'max': 2}, daemon=True)
-    # bot_thread2.start()
 
     background_loop_thread = threading.Thread(target=background_loop, daemon=True)
     background_loop_thread.start()

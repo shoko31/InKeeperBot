@@ -21,7 +21,6 @@ async def cmd_force_save(server, userid, channel, message):
         await msg.edit(embed=save_error_embed)
         return False
     await msg.edit(embed=saved_embed)
-    #await channel.send('Server saved !')
     return True
 
 

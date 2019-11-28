@@ -1,0 +1,26 @@
+- **#CMDPREFIX#help** : displays this message
+- **#CMDPREFIX#commands** :  displays this message
+- **#CMDPREFIX#version** : displays the bot version
+
+- **#CMDPREFIX#afk** : enables fun mentions when you're going afk
+- **#CMDPREFIX#stopafk** : disables fun mentions when you're going afk
+- **#CMDPREFIX#warns** : displays received warnings
+- **#CMDPREFIX#xp** : displays your current experience points
+- **#CMDPREFIX#daily** or **#CMDPREFIX#dailyreward** : display the remaining time before your next daily reward
+
+- **#CMDPREFIX#prefix** : displays the command prefix (by default: `!!`)
+- **#CMDPREFIX#prefix <prefix>** : changes the command prefix (by default: `!!`)
+- **#CMDPREFIX#warns <users>** : displays received warnings of specified users
+- **#CMDPREFIX#warn <users> <reason>** : gives a warning to specified users
+- **#CMDPREFIX#mute <users> (<time>)** : prevents specified users from speaking (for X seconds)
+- **#CMDPREFIX#unmute <users>** : cancels speaking prevention for specified users
+- **#CMDPREFIX#deafen <users> (<time>)** : prevents specified users from listening (for X secondes)
+- **#CMDPREFIX#undeafen <users>** : cancels listening prevention for specified users
+- **#CMDPREFIX#xp <users>** : displays specified users current experience points
+
+- **#CMDPREFIX#toggleaccept** : enables/disables usage of `#CMDPREFIX#accept` command
+- **#CMDPREFIX#acceptgroup <group>** : set the server group for the `#CMDPREFIX#accept` command
+- **#CMDPREFIX#perm <groups> <perms>** : adds/deletes permissions to specified server groups
+- **#CMDPREFIX#xp <users> <amount>** : Give specified users experience points
+
+:grey_question: **Back to help home page**

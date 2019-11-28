@@ -7,7 +7,7 @@ from user import User
 
 async def cmd_set_lang(server, userid, channel, message):
     splited_message = str(message.content).split()
-    new_lang = splited_message[1]
+    new_lang = splited_message[1].lower()
     server.lang = new_lang
     await channel.send(Lang.get('CMD_LANG_SET', server.lang).format(new_lang))
     return True

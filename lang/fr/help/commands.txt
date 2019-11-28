@@ -18,8 +18,9 @@
 - **#CMDPREFIX#undeafen <users>** : suspend la restriction d'écoute des utilisateurs mentionnés
 - **#CMDPREFIX#xp <users>** : affiche les points d'expérience des utilisateurs mentionnés
 
-- **#CMDPREFIX#lang <lang_key>** : change la langue du bot sur le serveur
 - **#CMDPREFIX#toggleaccept** : active/désactive l'utilisation de la commande `#CMDPREFIX#accept`
 - **#CMDPREFIX#acceptgroup <group>** : définie le groupe pour la commande `#CMDPREFIX#accept`
 - **#CMDPREFIX#perm <groups> <perms>** : ajoute/supprime les permissions aux groupes
 - **#CMDPREFIX#xp <users> <amount>** : donne des points d'expérience aux utilisateurs mentionnés
+
+:grey_question: **Retour au menu d'accueil de l'aide**

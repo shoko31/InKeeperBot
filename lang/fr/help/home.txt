@@ -1,0 +1,8 @@
+Salut **#USER#** !
+Je suis **#BOT#**.
+Avec moi, tu pourras bientôt faire plein de trucs cool :thumbsup:. Mais pour le moment, je suis encore en développement :construction_worker:.
+Choisis une catégorie en cliquant sur l'emoji correspondant:
+
+:video_game: **Jeux disponibles**
+:grey_exclamation: **Commandes disponibles**
+:globe_with_meridians: **Réglage de la langue**

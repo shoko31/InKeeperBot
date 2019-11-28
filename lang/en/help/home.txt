@@ -1,0 +1,8 @@
+Hey **#USER#** !
+I'm **#BOT#**.
+With me, you'll soon be able to do a lot of cool things :thumbsup:. But for now, I am still under development :construction_worker:.
+Select a category by clicking the corresponding emoji:
+
+:video_game: **Available games**
+:grey_exclamation: **Available commands**
+:globe_with_meridians: **Language settings**

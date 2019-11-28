@@ -1,0 +1,3 @@
+- **#CMDPREFIX#dice <number>** : lance le nombre désiré de dés (max. 9)
+
+:grey_question: **Retour au menu d'accueil de l'aide**

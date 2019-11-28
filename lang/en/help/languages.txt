@@ -1,0 +1,7 @@
+- **#CMDPREFIX#lang <lang_key>** : changes the bot language on the server
+
+Availaible language keys are :
+- :flag_us: **`EN`**
+- :flag_fr: **`FR`**
+
+:grey_question: **Back to help home page**

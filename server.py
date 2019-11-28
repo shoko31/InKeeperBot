@@ -7,13 +7,13 @@ from discord import embeds, colour
 from discord.utils import find
 import json
 import os
-from utils import load_json_data, myconverter, bot_id
+from utils import load_json_data, myconverter, bot_id, simple_embed, COLOR
 import threading
 from db import db
 
 from cmds.cmd_accept import AcceptCmd, ToggleAcceptCmd, AcceptGroupCmd
 from cmds.cmd_version import VersionCmd
-from cmds.cmd_help import HelpCmd, CommandsCmd
+from cmds.cmd_help import HelpCmd, CommandsCmd, HelpGamesCmd, HelpHomeCmd, HelpLanguagesCmd, HelpCommandsCmd, HELP_COMMANDS_EMOJI, HELP_LANGUAGE_EMOJI, HELP_GAMES_EMOJI, HELP_HOME_EMOJI
 from cmds.cmd_warn import WarnCmd
 from cmds.cmd_warns import WarnsCmd
 from cmds.cmd_afk import AfkCmd
@@ -29,6 +29,7 @@ from cmds.cmd_xp import XpCmd
 from cmds.cmd_tft import TFTCmd
 from cmds.cmd_force_save import ForceSaveCmd
 from cmds.cmd_daily_reward import DailyRewardCmd, DailyRewardAliasCmd
+from cmds.cmd_dice import DiceCmd
 
 
 class Server:
@@ -134,8 +135,15 @@ class Server:
                                      .replace('#BOT#', str(bot_id[0])))
 
     async def bot_message_get_reaction(self, message, reaction, userid):
-        print(type(reaction.emoji))
-        await message.channel.send(f'{User.get_at_mention(userid)} mentionned my message')
+        reaction_commands = {
+            HELP_GAMES_EMOJI: HelpGamesCmd,
+            HELP_HOME_EMOJI: HelpHomeCmd,
+            HELP_LANGUAGE_EMOJI: HelpLanguagesCmd,
+            HELP_COMMANDS_EMOJI: HelpCommandsCmd
+        }
+
+        if reaction.name is not None and reaction.name in reaction_commands.keys():
+                await reaction_commands[reaction.name].run_cmd(self, userid, message.channel, message)
 
     async def print_bot_message(self, msg=None, embed=None):
         bot_channel = self.get_bot_text_channel()
@@ -165,7 +173,8 @@ class Server:
                     XpCmd,
                     TFTCmd,
                     ForceSaveCmd,
-                    DailyRewardCmd, DailyRewardAliasCmd]
+                    DailyRewardCmd, DailyRewardAliasCmd,
+                    DiceCmd]
 
         found_valid_command = False
         for cmd in commands:
@@ -179,7 +188,7 @@ class Server:
                         f"{User.get_at_mention(userid)} tried to use **{self.cmd_prefix}{cmd.name}** command but failed (||{msg.content}||)")
                 break
         if not found_valid_command and content.startswith(self.cmd_prefix):
-            await channel.send(Lang.get('UNKNOWN_CMD', self.lang).format(content, self.cmd_prefix))
+            await channel.send(embed=simple_embed(value=Lang.get('UNKNOWN_CMD', self.lang).format(content, self.cmd_prefix), color=COLOR.LIGHT_RED))
 
     ### SAVE AND LOAD ###
     @staticmethod

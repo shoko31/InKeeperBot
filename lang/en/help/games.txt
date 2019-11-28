@@ -1,0 +1,3 @@
+- **#CMDPREFIX#dice <number>** : throw desired number of dices dices (max. 9)
+
+:grey_question: **Back to help home page**

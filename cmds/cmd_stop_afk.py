@@ -5,7 +5,6 @@ from config import cfg
 from cmds.cmd import ServerCmd
 from user import User
 
-
 async def cmd_stop_afk(server, userid, channel, message):  # stop afk mentions (but keep admin logs)
     user = server.members[userid]
     user.afk_mentions = False

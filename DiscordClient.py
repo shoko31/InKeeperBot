@@ -66,16 +66,23 @@ class DiscordClient(discord.Client):
                     if server is not None:
                         await server.cmd_router(message, message.author.id, message.channel)
 
-    async def on_reaction_add(self, reaction, user):
-        if reaction.me or user == self.user:  # Filter auto-reaction or bot reaction
+    async def on_raw_reaction_add(self, payload):
+        if payload.guild_id is None or payload.channel_id is None or payload.user_id is None or payload.message_id is None:
             return
-        if reaction.message is None or reaction.message.author != self.user:  # Only catch bot's messages reactions
+        if payload.user_id == self.user.id:  # Filter auto-reaction or bot reaction
             return
-        if type(user) is discord.member.Member:
-            server = self.servers.get(user.guild.id)
-            if server is None:
-                raise Exception('server not found (on_reaction_add')
-            await server.bot_message_get_reaction(reaction.message, reaction, user.id)
+        server = self.servers.get(payload.guild_id)
+        if server is None:
+            raise Exception('server not found (add raw reaction)')
+        channel = server.guild.get_channel(payload.channel_id)
+        if channel is None:
+            raise Exception('channel not found (add raw reaction)')
+        message = await channel.fetch_message(payload.message_id)
+        if message is None:
+            raise Exception('message not found (add raw reaction)')
+        if message.author.id != self.user.id:  # filter on bot's message reaction
+            return
+        await server.bot_message_get_reaction(message, payload.emoji, payload.user_id)
 
     async def on_voice_state_update(self, member, before, after):
         if before.channel is None and after.channel is None:
