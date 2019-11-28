@@ -107,14 +107,14 @@ class DiscordClient(discord.Client):
             server = self.servers.get(member.guild.id)
             if server is None:
                 raise Exception("unknown server (member joined)")
-            server.user_joined(member.id)
+            await server.user_joined(member.id)
 
     async def on_member_remove(self, member):
         if member is not None and member.guild is not None:
             server = self.servers.get(member.guild.id)
             if server is None:
                 raise Exception("unknown server (member left)")
-            server.user_left(member.id)
+            await server.user_left(member.id)
 
     async def on_guild_join(self, guild):
         print(f'{self.user} has joined a new Discord: {guild.name}(id: {guild.id})')
